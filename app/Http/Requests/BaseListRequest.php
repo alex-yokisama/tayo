@@ -19,7 +19,7 @@ class BaseListRequest extends FormRequest
 
     protected function allowedPerPages() : \Illuminate\Support\Collection
     {
-        return collect([1, 2, 10, 25, 50, 100, 200]);
+        return collect([20, 50, 100, 200]);
     }
 
     protected function defaultPerPage() : int
