@@ -29,6 +29,7 @@ Route::prefix('admin')->middleware(['can:use admin panel'])->group(function () {
         ['name' => 'country', 'plural' => 'countries', 'controller' => Controllers\CountryController::class, 'viewable' => true, 'updatable' => true, 'deletable' => true],
         ['name' => 'brand', 'plural' => 'brands', 'controller' => Controllers\BrandController::class, 'viewable' => true, 'updatable' => true, 'deletable' => true],
         ['name' => 'measure', 'plural' => 'measures', 'controller' => Controllers\MeasureController::class, 'viewable' => true, 'updatable' => true, 'deletable' => true],
+        ['name' => 'agent', 'plural' => 'agents', 'controller' => Controllers\AgentController::class, 'viewable' => true, 'updatable' => true, 'deletable' => true],
     ])->map(function ($item) {
         return (object)$item;
     });

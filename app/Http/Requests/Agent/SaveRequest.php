@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Brand;
+namespace App\Http\Requests\Agent;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -25,13 +25,12 @@ class SaveRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'country' => 'required|integer',
-            'bio' => 'sometimes|max:1000',
-            'website' => 'sometimes|url|max:255',
+            'is_retailer' => 'required|boolean',
+            'website' => 'sometimes|nullable|url|max:255',
             'name' => ['required', 'max:255']
         ];
 
-        $rule = Rule::unique('brand');
+        $rule = Rule::unique('agent');
         if ($this->id) {
             $rule->ignore($this->id);
         }
@@ -51,5 +50,9 @@ class SaveRequest extends FormRequest
                 'id' => null,
             ]);
         }
+
+        $this->merge([
+            'is_retailer' => (bool)$this->is_retailer,
+        ]);
     }
 }
