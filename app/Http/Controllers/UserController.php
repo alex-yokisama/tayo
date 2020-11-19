@@ -32,7 +32,7 @@ class UserController extends Controller
         $users->orderBy($request->sort, $request->order);
 
         return view('user.list', [
-            'users' => $users->get(),
+            'users' => $users->paginate($request->perPage),
             'backUrl' => $request->fullUrl()
         ]);
     }

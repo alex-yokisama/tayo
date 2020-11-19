@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\User;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseListRequest;
 use Illuminate\Validation\Rule;
 
-class ListRequest extends FormRequest
+class ListRequest extends BaseListRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,22 +32,8 @@ class ListRequest extends FormRequest
         ];
     }
 
-    protected function prepareForValidation()
+    protected function allowedSorts() : \Illuminate\Support\Collection
     {
-        $allowedSorts = collect(['id', 'name', 'email']);
-        if (!$allowedSorts->contains($this->sort)) {
-            $this->merge([
-                'sort' => 'id',
-            ]);
-        }
-        if (strtoupper($this->order) != 'DESC') {
-            $this->merge([
-                'order' => 'ASC',
-            ]);
-        } else {
-            $this->merge([
-                'order' => 'DESC',
-            ]);
-        }
+        return collect(['id', 'name', 'email']);
     }
 }

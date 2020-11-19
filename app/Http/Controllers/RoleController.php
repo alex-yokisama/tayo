@@ -28,7 +28,7 @@ class RoleController extends Controller
         $roles->orderBy($request->sort, $request->order);
 
         return view('role.list', [
-            'roles' => $roles->get(),
+            'roles' => $roles->paginate($request->perPage),
             'backUrl' => $request->fullUrl()
         ]);
     }
