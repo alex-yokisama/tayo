@@ -39,4 +39,22 @@ Route::prefix('admin')->middleware(['can:use admin panel'])->group(function () {
             Route::post('user', [Controllers\UserController::class, 'save']);
         });
     });
+
+    Route::middleware(['can:view countries'])->group(function() {
+        Route::get('countries', [Controllers\CountryController::class, 'list']);
+        Route::middleware(['can:update countries'])->group(function() {
+            Route::get('country', [Controllers\CountryController::class, 'form']);
+            Route::post('country', [Controllers\CountryController::class, 'save']);
+        });
+        Route::middleware(['can:delete countries'])->post('delete_countries', [Controllers\CountryController::class, 'delete']);
+    });
+
+    Route::middleware(['can:view brands'])->group(function() {
+        Route::get('brands', [Controllers\BrandController::class, 'list']);
+        Route::middleware(['can:update brands'])->group(function() {
+            Route::get('brand', [Controllers\BrandController::class, 'form']);
+            Route::post('brand', [Controllers\BrandController::class, 'save']);
+        });
+        Route::middleware(['can:delete brands'])->post('delete_brands', [Controllers\BrandController::class, 'delete']);
+    });
 });
