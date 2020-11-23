@@ -63,20 +63,56 @@ class AttributeController extends Controller
     {
         $attribute = Attribute::firstOrNew(['id' => $request->id]);
         $attribute->name = $request->name;
-        $attribute->type = $request->type;
+
+        if ($attribute->has('products')->count() > 0 && $attribute->type != $request->type) {
+            /*
+             * If attribute is used by at least one product
+             * type change is not allowed
+             */
+             return back()->withErrors([
+                 'update_type' => "Can't change type. This attribute is already used by some products."
+             ])->withInput();
+        } else {
+            $attribute->type = $request->type;
+        }
 
         $measure = Measure::find($request->measure);
         if ($measure) {
             $attribute->measure()->associate($measure);
         }
 
-        $attribute->save();
-
         if ($attribute->type == 4 || $attribute->type == 5) {
+            /*
+             * Getting ids of options, that exist for this attribute
+             * but are not present in the request data. They are
+             * candidates for deletion
+             */
+            $option_ids = $attribute->options->map(function($item) {
+                return $item->id;
+            });
+
+            if ($option_ids->count() > 0) {
+                $option_ids = $option_ids->diff(collect($request->options)->map(function($item) {
+                    return $item['id'];
+                }));
+
+                try {
+                    AttributeOption::whereIn('id', $option_ids)->delete();
+                } catch (\Illuminate\Database\QueryException $ex) {
+                    return back()->withErrors([
+                        'delete' => "Unable to delete options. They are already used in some products."
+                    ])->withInput();
+                }
+            }
+
             foreach ($request->options as $option) {
-                $attribute->options()->create(['name' => $option]);
+                $attributeOption = AttributeOption::firstOrNew(['id' => $option['id']]);
+                $attributeOption->name = $option['name'];
+                $attribute->options()->save($attributeOption);
             }
         }
+
+        $attribute->save();
 
         return redirect($request->backUrl)->with([
             'status' => 'success',

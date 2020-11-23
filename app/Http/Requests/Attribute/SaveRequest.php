@@ -38,7 +38,8 @@ class SaveRequest extends FormRequest
 
         if ($this->type == 4 || $this->type == 5) {
             $rules['options'] = 'required|array|distinct';
-            $rules['options.*'] = 'max:255';
+            $rules['options.*.name'] = 'max:255';
+            $rules['options.*.id'] = 'integer';
         }
 
         return $rules;
@@ -57,9 +58,15 @@ class SaveRequest extends FormRequest
         }
 
         $this->merge([
-            'options' => collect($this->options)->unique()->filter(function ($item) {
-                return strlen($item) > 0;
-            })->toArray(),
+            'options' => collect($this->options)->map(function ($item, $index) {
+                if (is_string($index)) {
+                    return ['id' => intval(str_replace('id_', '', $index)), 'name' => $item];
+                } else {
+                    return ['id' => 0, 'name' => $item];
+                }
+            })->filter(function($item) {
+                return strlen($item['name']) > 0;
+            })->values()->unique('name')->toArray(),
         ]);
     }
 }
