@@ -31,6 +31,8 @@ Route::prefix('admin')->middleware(['can:use admin panel'])->group(function () {
         ['name' => 'measure', 'plural' => 'measures', 'controller' => Controllers\MeasureController::class, 'viewable' => true, 'updatable' => true, 'deletable' => true],
         ['name' => 'agent', 'plural' => 'agents', 'controller' => Controllers\AgentController::class, 'viewable' => true, 'updatable' => true, 'deletable' => true],
         ['name' => 'currency', 'plural' => 'currencies', 'controller' => Controllers\CurrencyController::class, 'viewable' => true, 'updatable' => true, 'deletable' => true],
+        ['name' => 'attribute', 'plural' => 'attributes', 'controller' => Controllers\AttributeController::class, 'viewable' => true, 'updatable' => true, 'deletable' => true],
+        ['name' => 'category', 'plural' => 'categories', 'controller' => Controllers\CategoryController::class, 'viewable' => true, 'updatable' => true, 'deletable' => true],
     ])->map(function ($item) {
         return (object)$item;
     });
@@ -50,4 +52,5 @@ Route::prefix('admin')->middleware(['can:use admin panel'])->group(function () {
             });
         }
     }
+    Route::view('list', 'test.list');
 });
