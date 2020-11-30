@@ -25,16 +25,16 @@ class DeleteRequest extends FormRequest
     public function rules()
     {
         return [
-            'currencies' => 'required|array',
-            'currencies.*' => 'integer'
+            'items' => 'required|array',
+            'items.*' => 'integer'
         ];
     }
 
     protected function prepareForValidation()
     {
-        if (!$this->currencies) {
+        if (!$this->items) {
             $this->merge([
-                'currencies' => [],
+                'items' => [],
             ]);
         }
     }

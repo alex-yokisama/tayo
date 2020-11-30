@@ -24,7 +24,6 @@ class DeleteRequest extends FormRequest
      */
     public function rules()
     {
-        var_dump($this->attributes);
         return [
             'items' => 'required|array',
             'items.*' => 'integer'
@@ -33,7 +32,7 @@ class DeleteRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        if (!$this->attributes) {
+        if (!$this->items) {
             $this->merge([
                 'items' => [],
             ]);

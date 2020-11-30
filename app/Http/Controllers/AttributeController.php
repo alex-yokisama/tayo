@@ -9,41 +9,13 @@ use App\Models\Attribute;
 use App\Models\AttributeOption;
 use App\Models\Measure;
 
-class AttributeController extends Controller
+class AttributeController extends BaseItemController
 {
-    public function list(Requests\ListRequest $request)
+    protected $baseUrl = '/admin/attributes';
+
+    protected function types()
     {
-        $attributes = Attribute::orderByColumn($request->sort, $request->order);
-
-        if ($request->name) {
-            $attributes->where('name', 'LIKE', "%$request->name%");
-        }
-
-        if ($request->type) {
-            $attributes->where('type', '=', $request->type);
-        }
-
-        if ($request->measures && count($request->measures) > 0) {
-            $attributes->whereHas('measure', function($q) use ($request) {
-                $q->whereIn('id', $request->measures);
-            });
-        }
-
-        if ($request->option) {
-            $attributes->whereHas('option', function($q) use ($request) {
-                $q->where('name', 'LIKE', "%$request->option%");
-            });
-        }
-
-        return view('attribute.list', [
-            'attributes' => $attributes->paginate($request->perPage),
-            'backUrl' => $request->fullUrl()
-        ]);
-    }
-
-    public function form(Requests\GetFormRequest $request)
-    {
-        $types = collect([
+        return collect([
             0 => 'numeric',
             1 => 'string',
             2 => 'boolean',
@@ -51,12 +23,48 @@ class AttributeController extends Controller
             4 => 'single option',
             5 => 'multiple options'
         ]);
-        return view('attribute.form', [
-            'attribute' => Attribute::find($request->id),
-            'measures' => Measure::all(),
-            'types' => $types,
-            'backUrl' => $request->backUrl
-        ]);
+    }
+
+    public function list(Requests\ListRequest $request)
+    {
+        $items = Attribute::orderByColumn($request->sort, $request->order);
+
+        if ($request->name) {
+            $items->where('name', 'LIKE', "%$request->name%");
+        }
+
+        if ($request->type !== null) {
+            $items->where('type', '=', $request->type);
+        }
+
+        if ($request->measures && count($request->measures) > 0) {
+            $items->whereHas('measure', function($q) use ($request) {
+                $q->whereIn('id', $request->measures);
+            });
+        }
+
+        if ($request->option) {
+            $items->whereHas('option', function($q) use ($request) {
+                $q->where('name', 'LIKE', "%$request->option%");
+            });
+        }
+
+        $listData = $this->getListData($request);
+        $listData['items'] = $items->paginate($request->perPage);
+        $listData['measures'] = Measure::all();
+        $listData['types'] = $this->types();
+
+        return view('attribute.list', $listData);
+    }
+
+    public function form(Requests\GetFormRequest $request)
+    {
+        $formData = $this->getFormData($request);
+        $formData['item'] = Attribute::find($request->id);
+        $formData['measures'] = Measure::all();
+        $formData['types'] = $this->types();
+
+        return view('attribute.form', $formData);
     }
 
     public function save(Requests\SaveRequest $request)
@@ -64,7 +72,7 @@ class AttributeController extends Controller
         $attribute = Attribute::firstOrNew(['id' => $request->id]);
         $attribute->name = $request->name;
 
-        if ($attribute->has('products')->count() > 0 && $attribute->type != $request->type) {
+        if ($attribute->products()->count() > 0 && $attribute->type != $request->type) {
             /*
              * If attribute is used by at least one product
              * type change is not allowed

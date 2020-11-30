@@ -26,7 +26,7 @@ class SaveRequest extends FormRequest
     {
         $rules = [
             'country' => 'required|integer',
-            'symbol' => 'sometimes|max:3',
+            'symbol' => 'required|max:3',
             'name' => ['required', 'max:255']
         ];
 

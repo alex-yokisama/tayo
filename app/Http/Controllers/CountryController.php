@@ -7,28 +7,30 @@ use App\Http\Requests\Country as Requests;
 use App\Models\Country;
 use Illuminate\Http\RedirectResponse;
 
-class CountryController extends Controller
+class CountryController extends baseItemController
 {
+    protected $baseUrl = '/admin/countries';
+
     public function list(Requests\ListRequest $request)
     {
-        $countries = Country::orderBy($request->sort, $request->order);
+        $items = Country::orderBy($request->sort, $request->order);
 
         if ($request->name) {
-            $countries->where('name', 'LIKE', "%$request->name%");
+            $items->where('name', 'LIKE', "%$request->name%");
         }
 
-        return view('country.list', [
-            'countries' => $countries->paginate($request->perPage),
-            'backUrl' => $request->fullUrl()
-        ]);
+        $listData = $this->getListData($request);
+        $listData['items'] = $items->paginate($request->perPage);
+
+        return view('country.list', $listData);
     }
 
     public function form(Requests\GetFormRequest $request)
     {
-        return view('country.form', [
-            'country' => Country::find($request->id),
-            'backUrl' => $request->backUrl
-        ]);
+        $formData = $this->getFormData($request);
+        $formData['item'] = Country::find($request->id);
+
+        return view('country.form', $formData);
     }
 
     public function save(Requests\SaveRequest $request)
@@ -46,7 +48,7 @@ class CountryController extends Controller
     public function delete(Requests\DeleteRequest $request)
     {
         try {
-            Country::whereIn('id', $request->countries)->delete();
+            Country::whereIn('id', $request->items)->delete();
         } catch (\Illuminate\Database\QueryException $ex) {
             return back()->withErrors([
                 'delete' => 'Unable to delete. Selected items are used in other objects.'

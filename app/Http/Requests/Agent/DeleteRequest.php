@@ -25,16 +25,16 @@ class DeleteRequest extends FormRequest
     public function rules()
     {
         return [
-            'agents' => 'required|array',
-            'agents.*' => 'integer'
+            'items' => 'required|array',
+            'items.*' => 'integer'
         ];
     }
 
     protected function prepareForValidation()
     {
-        if (!$this->agents) {
+        if (!$this->items) {
             $this->merge([
-                'agents' => [],
+                'items' => [],
             ]);
         }
     }

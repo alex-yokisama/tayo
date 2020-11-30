@@ -7,43 +7,32 @@ use App\Http\Requests\Category as Requests;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Category;
 use App\Models\Attribute;
+use App\Services\SidebarLinksService;
 
-class CategoryController extends Controller
+class CategoryController extends BaseItemController
 {
+    protected $baseUrl = '/admin/categories';
+
     public function list(Requests\ListRequest $request)
     {
-        $items = Category::orderByColumn($request->sort, $request->order);
+        $items = Category::doesntHave('parent');
 
-        if ($request->name) {
-            $items->where('name', 'LIKE', "%$request->name%");
-        }
-
-        if ($request->parent) {
-            $items->whereHas('parent', function($q) use ($request) {
-                $q->where('name', 'LIKE', "%$request->parent%");
-            });
-        }
-
-        return view('category.list', [
-            'items' => $items->paginate($request->perPage),
-            'backUrl' => $request->fullUrl()
+        return view('category.tree', [
+            'items' => $items->get(),
+            'backUrl' => $request->fullUrl(),
+            'sidebarLinks' => SidebarLinksService::getLinks($this->baseUrl)
         ]);
     }
 
     public function form(Requests\GetFormRequest $request)
     {
-        $categories = Category::select();
-        if ($request->id) {
-            $categories->whereNotIn('id', [$request->id]);
-        }
+        $formData = $this->getFormData($request);
+        $formData['item'] = Category::find($request->id);
+        $formData['categories'] = $this->listWithFullPath(Category::doesntHave('parent')->get(), $request->id ? $request->id : 0);
+        $formData['attributes'] = Attribute::all();
+        $formData['parent'] = $request->parent;
 
-        return view('category.form', [
-            'item' => Category::find($request->id),
-            'categories' => $categories->get(),
-            'attributes' => Attribute::all(),
-            'parent' => Category::find($request->parent),
-            'backUrl' => $request->backUrl
-        ]);
+        return view('category.form', $formData);
     }
 
     public function save(Requests\SaveRequest $request)
@@ -51,17 +40,23 @@ class CategoryController extends Controller
         $item = Category::firstOrNew(['id' => $request->id]);
         $item->name = $request->name;
 
+        $item->parent()->dissociate();
         $parent = Category::find($request->parent);
         if ($parent) {
             $item->parent()->associate($parent);
         }
 
+        $item->save();
+        $item->refresh();
+
         $item->attributes()->detach();
 
-        foreach ($request->attribute_ids as $attribute_id) {
-            $attribute = Attribute::find($attribute_id);
-            if ($attribute) {
-                $item->attributes()->attach($attribute);
+        if ($request->attribute_ids && count($request->attribute_ids) > 0) {
+            foreach ($request->attribute_ids as $attribute_id) {
+                $attribute = Attribute::find($attribute_id);
+                if ($attribute) {
+                    $item->attributes()->attach($attribute);
+                }
             }
         }
 
@@ -86,5 +81,24 @@ class CategoryController extends Controller
             'status' => 'success',
             'message' => 'deleted successfully'
         ]);
+    }
+
+    protected function listWithFullPath($categories, $excludeId = 0)
+    {
+        $list = collect([]);
+        foreach ($categories as $category) {
+            $item = (object)['id' => $category->id, 'name' => $category->name];
+            if ($category->id != $excludeId) {
+                $list->push($item);
+
+                if ($category->children) {
+                    $list = $list->concat($this->listWithFullPath($category->children, $excludeId)->map(function($val) use ($item) {
+                        $val->name = $item->name.' > '.$val->name;
+                        return $val;
+                    }));
+                }
+            }
+        }
+        return $list;
     }
 }

@@ -8,39 +8,42 @@ use Illuminate\Http\RedirectResponse;
 use App\Models\Currency;
 use App\Models\Country;
 
-class CurrencyController extends Controller
+class CurrencyController extends BaseItemController
 {
+    protected $baseUrl = '/admin/currencies';
+
     public function list(Requests\ListRequest $request)
     {
-        $currencies = Currency::orderByColumn($request->sort, $request->order);
+        $items = Currency::orderByColumn($request->sort, $request->order);
 
         if ($request->name) {
-            $currencies->where('name', 'LIKE', "%$request->name%");
+            $items->where('name', 'LIKE', "%$request->name%");
         }
 
         if ($request->symbol) {
-            $currencies->where('symbol', 'LIKE', "%$request->symbol%");
+            $items->where('symbol', 'LIKE', "%$request->symbol%");
         }
 
         if ($request->countries && count($request->countries) > 0) {
-            $currencies->whereHas('country', function($q) use ($request) {
+            $items->whereHas('country', function($q) use ($request) {
                 $q->whereIn('id', $request->countries);
             });
         }
 
-        return view('currency.list', [
-            'currencies' => $currencies->paginate($request->perPage),
-            'backUrl' => $request->fullUrl()
-        ]);
+        $listData = $this->getListData($request);
+        $listData['items'] = $items->paginate($request->perPage);
+        $listData['countries'] = Country::all();
+
+        return view('currency.list', $listData);
     }
 
     public function form(Requests\GetFormRequest $request)
     {
-        return view('currency.form', [
-            'currency' => Currency::find($request->id),
-            'countries' => Country::all(),
-            'backUrl' => $request->backUrl
-        ]);
+        $formData = $this->getFormData($request);
+        $formData['item'] = Currency::find($request->id);
+        $formData['countries'] = Country::all();
+
+        return view('currency.form', $formData);
     }
 
     public function save(Requests\SaveRequest $request)
@@ -69,7 +72,7 @@ class CurrencyController extends Controller
     public function delete(Requests\DeleteRequest $request)
     {
         try {
-            Currency::whereIn('id', $request->currencies)->delete();
+            Currency::whereIn('id', $request->items)->delete();
         } catch (\Illuminate\Database\QueryException $ex) {
             return back()->withErrors([
                 'delete' => 'Unable to delete. Selected items are used in other objects.'

@@ -7,34 +7,36 @@ use App\Http\Requests\User as Requests;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Validator;
 
-class UserController extends Controller
+class UserController extends BaseItemController
 {
+    protected $baseUrl = '/admin/users';
+
     public function list(Requests\ListRequest $request)
     {
-        $users = User::with('roles');
+        $items = User::with('roles');
 
         if ($request->name) {
-            $users->where('name', 'LIKE', "%$request->name%");
+            $items->where('name', 'LIKE', "%$request->name%");
         }
 
         if ($request->email) {
-            $users->where('email', 'LIKE', "%$request->email%");
+            $items->where('email', 'LIKE', "%$request->email%");
         }
 
         if ($request->roles && count($request->roles) > 0) {
-            $users->whereHas('roles', function($q) use ($request) {
+            $items->whereHas('roles', function($q) use ($request) {
                 $q->whereIn('id', $request->roles);
             });
         }
 
-        $users->orderBy($request->sort, $request->order);
+        $items->orderBy($request->sort, $request->order);
 
-        return view('user.list', [
-            'users' => $users->paginate($request->perPage),
-            'backUrl' => $request->fullUrl()
-        ]);
+        $listData = $this->getListData($request);
+        $listData['items'] = $items->paginate($request->perPage);
+        $listData['roles'] = Role::all();
+
+        return view('user.list', $listData);
     }
 
     public function form(Requests\GetFormRequest $request)
@@ -43,11 +45,12 @@ class UserController extends Controller
         if (!$user) {
             return redirect($request->backUrl)->withErrors(['404', 'user not found']);
         }
-        return view('user.form', [
-            'user' => $user,
-            'roles' => Role::all(),
-            'backUrl' => $request->backUrl
-        ]);
+
+        $formData = $this->getFormData($request);
+        $formData['item'] = $user;
+        $formData['roles'] = Role::all();
+
+        return view('user.form', $formData);
     }
 
     public function save(Requests\SaveRequest $request)

@@ -7,39 +7,41 @@ use App\Http\Requests\Role as Requests;
 use Illuminate\Http\RedirectResponse;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Support\Facades\Validator;
 
-class RoleController extends Controller
+class RoleController extends BaseItemController
 {
+    protected $baseUrl = '/admin/roles';
+
     public function list(Requests\ListRequest $request)
     {
-        $roles = Role::whereNotIn('id', [1]);
+        $items = Role::whereNotIn('id', [1]);
 
         if ($request->name) {
-            $roles->where('name', 'LIKE', "%$request->name%");
+            $items->where('name', 'LIKE', "%$request->name%");
         }
 
         if ($request->permissions && count($request->permissions) > 0) {
-            $roles->whereHas('permissions', function($q) use ($request) {
+            $items->whereHas('permissions', function($q) use ($request) {
                 $q->whereIn('id', $request->permissions);
             });
         }
 
-        $roles->orderBy($request->sort, $request->order);
+        $items->orderBy($request->sort, $request->order);
 
-        return view('role.list', [
-            'roles' => $roles->paginate($request->perPage),
-            'backUrl' => $request->fullUrl()
-        ]);
+        $listData = $this->getListData($request);
+        $listData['items'] = $items->paginate($request->perPage);
+        $listData['permissions'] = Permission::all();
+
+        return view('role.list', $listData);
     }
 
     public function form(Requests\GetFormRequest $request)
     {
-        return view('role.form', [
-            'role' => Role::find($request->id),
-            'permissions' => Permission::all(),
-            'backUrl' => $request->backUrl
-        ]);
+        $formData = $this->getFormData($request);
+        $formData['item'] = Role::find($request->id);
+        $formData['permissions'] = Permission::all();
+
+        return view('role.form', $formData);
     }
 
     public function save(Requests\SaveRequest $request)
@@ -59,7 +61,7 @@ class RoleController extends Controller
 
     public function delete(Requests\DeleteRequest $request)
     {
-        Role::whereIn('id', $request->roles)->delete();
+        Role::whereIn('id', $request->items)->delete();
         return redirect($request->backUrl)->with([
             'status' => 'success',
             'message' => 'deleted successfully'

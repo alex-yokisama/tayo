@@ -7,32 +7,34 @@ use App\Http\Requests\Measure as Requests;
 use App\Models\Measure;
 use Illuminate\Http\RedirectResponse;
 
-class MeasureController extends Controller
+class MeasureController extends BaseItemController
 {
+    protected $baseUrl = '/admin/measures';
+
     public function list(Requests\ListRequest $request)
     {
-        $measures = Measure::orderBy($request->sort, $request->order);
+        $items = Measure::orderBy($request->sort, $request->order);
 
         if ($request->name) {
-            $measures->where('name', 'LIKE', "%$request->name%");
+            $items->where('name', 'LIKE', "%$request->name%");
         }
 
         if ($request->short_name) {
-            $measures->where('short_name', 'LIKE', "%$request->short_name%");
+            $items->where('short_name', 'LIKE', "%$request->short_name%");
         }
 
-        return view('measure.list', [
-            'measures' => $measures->paginate($request->perPage),
-            'backUrl' => $request->fullUrl()
-        ]);
+        $listData = $this->getListData($request);
+        $listData['items'] = $items->paginate($request->perPage);
+
+        return view('measure.list', $listData);
     }
 
     public function form(Requests\GetFormRequest $request)
     {
-        return view('measure.form', [
-            'measure' => Measure::find($request->id),
-            'backUrl' => $request->backUrl
-        ]);
+        $formData = $this->getFormData($request);
+        $formData['item'] = Measure::find($request->id);
+
+        return view('measure.form', $formData);
     }
 
     public function save(Requests\SaveRequest $request)
@@ -51,7 +53,7 @@ class MeasureController extends Controller
     public function delete(Requests\DeleteRequest $request)
     {
         try {
-            Measure::whereIn('id', $request->measures)->delete();
+            Measure::whereIn('id', $request->items)->delete();
         } catch (\Illuminate\Database\QueryException $ex) {
             return back()->withErrors([
                 'delete' => 'Unable to delete. Selected items are used in other objects.'

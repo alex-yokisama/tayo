@@ -18,11 +18,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
+// Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+//     return view('dashboard');
+// })->name('dashboard');
 
-Route::prefix('admin')->middleware(['can:use admin panel'])->group(function () {
+Route::prefix('admin')->middleware(['auth', 'verified', 'can:use admin panel'])->group(function () {
+    Route::get('/', function () {
+        return redirect('admin/roles');
+    });
+
     $entities = collect([
         ['name' => 'role', 'plural' => 'roles', 'controller' => Controllers\RoleController::class, 'viewable' => true, 'updatable' => true, 'deletable' => true],
         ['name' => 'user', 'plural' => 'users', 'controller' => Controllers\UserController::class, 'viewable' => true, 'updatable' => true, 'deletable' => false],
@@ -52,5 +56,4 @@ Route::prefix('admin')->middleware(['can:use admin panel'])->group(function () {
             });
         }
     }
-    Route::view('list', 'test.list');
 });

@@ -14,19 +14,30 @@ class ListRequest extends BaseListRequest
 
     public function rules()
     {
-        return [
+        $rules = [
             'name' => 'sometimes|max:255',
             'option' => 'sometimes|max:255',
-            'type' => 'sometimes|integer|min:0|max:5',
             'page' => 'sometimes|integer',
             'perPage' => 'required|integer',
             'measures' => 'sometimes|array',
             'measures.*' => 'integer'
         ];
+        if ($this->type !== null) {
+            $rules['type'] = 'sometimes|integer|min:0|max:5';
+        }
+        return $rules;
     }
 
     protected function allowedSorts() : \Illuminate\Support\Collection
     {
         return collect(['id', 'name', 'type', 'measure']);
+    }
+
+    protected function prepareForValidation()
+    {
+        parent::prepareForValidation();
+        if ($this->type == "any") {
+            $this->type = null;
+        }
     }
 }
