@@ -102,9 +102,6 @@
                                 <x-common.button.a href="/admin/attribute?id={{ $item->id }}&backUrl={{ urlencode($backUrl) }}">
                                     Edit
                                 </x-common.button.a>
-                                <x-common.a.a href="/admin/users?attributes[]={{ $item->id }}">
-                                    Users
-                                </x-common.a.a>
                             </x-common.button.group>
                         </x-common.table.td>
                     </x-common.table.tr>
