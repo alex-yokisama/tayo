@@ -27,7 +27,6 @@ class SaveRequest extends FormRequest
         $rules = [
             'type' => 'required|integer|min:0|max:5',
             'name' => ['required', 'max:255'],
-            'measure' => 'sometimes|nullable|integer',
         ];
 
         $rule = Rule::unique('attribute');
@@ -40,6 +39,9 @@ class SaveRequest extends FormRequest
             $rules['options'] = 'required|array|distinct';
             $rules['options.*.name'] = 'max:255';
             $rules['options.*.id'] = 'integer';
+        }
+        if ($this->type == 0) {
+            $rules['measure'] = 'required|integer';
         }
 
         return $rules;

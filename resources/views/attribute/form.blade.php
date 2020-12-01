@@ -51,7 +51,7 @@
                     Measure unit
                 </x-slot>
                 <select class="border-2 px-2 py-0.5" name="measure">
-                    <option value="0">-- select --</option>
+                    <option>-- select --</option>
                     @foreach ($measures as $measure)
                         <option value="{{ $measure->id }}"
                             {{
