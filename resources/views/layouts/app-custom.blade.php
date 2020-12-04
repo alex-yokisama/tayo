@@ -42,6 +42,6 @@
 
         @livewireScripts
 
-        @stack('footerScripts');
+        @stack('footerScripts')
     </body>
 </html>

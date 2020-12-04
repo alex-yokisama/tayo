@@ -4,6 +4,6 @@
     </x-search>
 </div>
 
-<div class="">
+<div class="overflow-auto">
     {{ $slot }}
 </div>

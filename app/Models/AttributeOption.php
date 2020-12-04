@@ -10,7 +10,7 @@ class AttributeOption extends Model
     use HasFactory;
 
     protected $table = 'attribute_option';
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'attribute_id'];
 
     public function attribute()
     {

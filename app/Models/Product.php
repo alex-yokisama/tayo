@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Product extends Model
 {
@@ -43,7 +44,7 @@ class Product extends Model
 
     public function priceChanges()
     {
-        return $this->hasMany('App\Models\ProductPriceChange', 'product_id');
+        return $this->hasMany('App\Models\ProductPriceChange', 'product_id')->orderBy('created_at', 'ASC');
     }
 
     public function attributes()
@@ -58,5 +59,44 @@ class Product extends Model
             return $attribute->valueForProduct($this->id);
         }
         return null;
+    }
+
+    static public function orderByColumn($column, $order = 'ASC')
+    {
+        $order = strtoupper($order) == 'ASC' ? 'ASC' : 'DESC';
+        if (self::ownSortableColumns()->contains($column)) {
+            return self::orderBy($column, $order);
+        } else {
+            return self::orderByRelation($column, $order);
+        }
+    }
+
+    static protected function orderByRelation($column, $order)
+    {
+        if ($column == 'country') {
+            return self::select('product.*')
+                        ->join('country', 'country.id', '=', 'product.country_id')
+                        ->orderBy('country.name', $order);
+        } elseif ($column == 'category') {
+            return self::select('product.*')
+                        ->join('category', 'category.id', '=', 'product.category_id')
+                        ->orderBy('category.name', $order);
+        } elseif ($column == 'brand') {
+            return self::select('product.*')
+                        ->join('brand', 'brand.id', '=', 'product.brand_id')
+                        ->orderBy('brand.name', $order);
+        } else {
+            return self::select('product.*');
+        }
+    }
+
+    static protected function ownSortableColumns()
+    {
+        return collect(['id', 'name', 'sku', 'model', 'model_family', 'created_at', 'date_publish', 'price_msrp', 'price_current', 'is_promote']);
+    }
+
+    public function getCreatedAtAttribute($date)
+    {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d');
     }
 }

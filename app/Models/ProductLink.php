@@ -10,6 +10,7 @@ class ProductLink extends Model
     use HasFactory;
 
     protected $table = 'product_link';
+    protected $fillable = ['agent_id', 'currency_id', 'price_old', 'price_new', 'link', 'is_primary'];
 
     public function product()
     {

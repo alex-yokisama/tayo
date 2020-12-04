@@ -37,8 +37,11 @@ class Attribute extends Model
         return $this->hasMany('App\Models\ProductAttributeValue', 'attribute_id');
     }
 
-    public function valueForProduct(int $product_id)
+    public function valueForProduct($product_id)
     {
+        if (!$product_id) {
+            return null;
+        }
         $values = $this->values()->where('product_id', $product_id)->get();
         if ($values->count() > 0) {
             switch ($this->type) {
@@ -55,19 +58,11 @@ class Attribute extends Model
                     return $values[0]->value_date;
                     break;
                 case 4:
-                    $option = $values[0]->option;
-                    if ($option) {
-                        return $option->name;
-                    }
-                    return null;
+                    return $values[0]->option;
                     break;
                 case 5:
                     return $values->map(function($v) {
-                        $option = $v->option;
-                        if ($option) {
-                            return $option->name;
-                        }
-                        return null;
+                        return $v->option;
                     })->filter(function($v) {
                         return $v !== null;
                     });

@@ -57,6 +57,9 @@ class BaseListRequest extends FormRequest
                 'order' => 'DESC',
             ]);
         }
+        if ($this->sort == 'id') {
+            $this->order = 'DESC';
+        }
     }
 
     protected function preparePerPage()
