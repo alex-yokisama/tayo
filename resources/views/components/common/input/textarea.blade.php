@@ -1,7 +1,7 @@
 @props(['name', 'value'])
 
-<div x-data="textarea()">
-    <textarea {{ $attributes->merge(['class' => 'block border resize-none px-2 py-0.5']) }} x-on:keyup.debounce.500ms="autoresize" name="{{ $name }}" cols="50">{{ trim($value) }}</textarea>
+<div x-data="textarea()" x-init="autoresize($refs.textarea)">
+    <textarea {{ $attributes->merge(['class' => 'block border resize-none px-2 py-0.5']) }} x-ref="textarea" x-on:keyup.debounce.500ms="autoresize($refs.textarea)" name="{{ $name }}" cols="50">{{ trim($value) }}</textarea>
 </div>
 
 @once
@@ -9,10 +9,9 @@
         <script>
             function textarea() {
                 return {
-                    autoresize($event) {
-                        let element = $event.target;
+                    autoresize(element) {
                         element.style.height = "1px";
-                        element.style.height = (28 + element.scrollHeight) + "px";
+                        element.style.height = Math.max(52, (28 + element.scrollHeight)) + "px";
                     }
                 }
             }

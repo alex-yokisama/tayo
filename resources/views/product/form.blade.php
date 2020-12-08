@@ -1,5 +1,5 @@
 <x-custom-layout>
-    
+
     <x-slot name="title">
         Product
     </x-slot>
@@ -258,7 +258,9 @@
                             'link' => $item->link,
                             'is_primary' => $item->is_primary
                         ];
-                    })])
+                    })->toArray()])
+                @else
+                    @livewire('product-links', ['links' => []])
                 @endif
             </x-slot>
 
