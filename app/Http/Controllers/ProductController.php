@@ -111,6 +111,7 @@ class ProductController extends BaseItemController
         $formData['item'] = Product::find($request->id);
         $formData['brands'] = Brand::all();
         $formData['countries'] = Country::all();
+        $formData['categories'] = Category::listWithFullPath();
 
         return view('product.form', $formData);
     }

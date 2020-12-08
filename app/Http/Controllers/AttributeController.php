@@ -85,9 +85,8 @@ class AttributeController extends BaseItemController
         }
 
         $measure = Measure::find($request->measure);
-        if ($measure) {
-            $attribute->measure()->associate($measure);
-        }
+        $attribute->measure()->associate($measure);
+
 
         if ($attribute->type == 4 || $attribute->type == 5) {
             /*

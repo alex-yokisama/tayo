@@ -50,7 +50,7 @@
                 <x-slot name="label">
                     Parent
                 </x-slot>
-                <select class="border-2 px-2 py-0.5" name="parent">
+                <select x-data="categorySelect()" x-ref='categorySelect' x-on:change="categoryChanged($refs)" x-init="categoryChanged($refs)" class="border px-2 py-0.5" name="parent">
                     <option value="0">-- select --</option>
                     @foreach ($categories as $category)
                         <option value="{{ $category->id }}"
@@ -68,25 +68,37 @@
                         </option>
                     @endforeach
                 </select>
+                @once
+                    @push('footerScripts')
+                        <script>
+                            function categorySelect() {
+                                return {
+                                    categoryChanged($refs) {
+                                        Livewire.emit('categoryChanged', $refs.categorySelect.value);
+                                    }
+                                }
+                            }
+                        </script>
+                    @endpush
+                @endonce
             </x-form.input>
             <x-form.input>
                 <x-slot name="label">
                     Attributes
                 </x-slot>
-                <div class="grid gap-1 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                    @foreach ($attributes as $attribute)
-                        <label>
-                            <input type="checkbox" name="attribute_ids[]" value="{{ $attribute->id }}"
-                                {{
-                                    (old('parent') !== null) ?
-                                    (collect(old('attribute_ids'))->contains($attribute->id) ? 'checked' : '') :
-                                    (($item !== null && $item->attributes->contains($attribute)) ? 'checked' : '')
-                                }}
-                            >
-                            {{ $attribute->name }}
-                        </label>
-                    @endforeach
-                </div>
+                @livewire('category-attributes', [
+                    'name' => 'attribute_ids',
+                    'categoryId' => ($errors->any() ?
+                                    (old('parent')) :
+                                    ($item === null ?
+                                        $parent :
+                                        ($item->parent !== null ? $item->parent->id : null))),
+                    'ownAttributes' => ($errors->any() ?
+                                        (old('attribute_ids')) :
+                                        ($item !== null ? $item->attributes->map(function($item) {
+                                            return $item->id;
+                                        })->toArray() : []))
+                ])
             </x-form.input>
         </x-form.container>
     </form>

@@ -32,6 +32,6 @@ class ProductAttributes extends Component
             $this->items = collect([]);
             return;
         }
-        $this->items = $category->attributes;
+        $this->items = $category->attributes()->orderBy('name', 'ASC')->get();
     }
 }

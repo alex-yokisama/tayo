@@ -207,7 +207,32 @@
 
             <x-slot name="Relations">
                 <x-form.container>
-                    @livewire('category-select', ['name' => 'category', 'itemId' => ($errors->any() ? (old('category')) : ($item !== null ? $item->category->id : null))])
+                    <x-form.input>
+                        <x-slot name="label">
+                            Category
+                        </x-slot>
+                        <x-common.input.select x-data="categorySelect()" x-ref='categorySelect' x-on:change="categoryChanged($refs)" x-init="categoryChanged($refs)"
+                            name="category"
+                            :required="true"
+                            selected="{{ old('category') !== null ? old('category') : ($item !== null && $item->category !== null ? $item->category->id : '') }}"
+                            :options="($categories->map(function($item) {
+                                return (object)['key' => $item->id, 'value' => $item->name];
+                            })->toArray())"
+                        />
+                        @once
+                            @push('footerScripts')
+                                <script>
+                                    function categorySelect() {
+                                        return {
+                                            categoryChanged($refs) {
+                                                Livewire.emit('categoryChanged', $refs.categorySelect.value);
+                                            }
+                                        }
+                                    }
+                                </script>
+                            @endpush
+                        @endonce
+                    </x-form.input>
                     <x-form.input>
                         <x-slot name="label">
                             Brand

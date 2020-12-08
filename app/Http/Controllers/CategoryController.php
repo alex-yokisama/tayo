@@ -15,7 +15,7 @@ class CategoryController extends BaseItemController
 
     public function list(Requests\ListRequest $request)
     {
-        $items = Category::doesntHave('parent');
+        $items = Category::doesntHave('parent')->orderBy('name', 'ASC');
 
         return view('category.tree', [
             'items' => $items->get(),
@@ -28,7 +28,7 @@ class CategoryController extends BaseItemController
     {
         $formData = $this->getFormData($request);
         $formData['item'] = Category::find($request->id);
-        $formData['categories'] = $this->listWithFullPath(Category::doesntHave('parent')->get(), $request->id ? $request->id : 0);
+        $formData['categories'] = Category::listWithFullPath($request->id ? $request->id : 0);
         $formData['attributes'] = Attribute::all();
         $formData['parent'] = $request->parent;
 
@@ -51,10 +51,16 @@ class CategoryController extends BaseItemController
 
         $item->attributes()->detach();
 
+        if ($parent) {
+            foreach ($parent->attributes as $attribute) {
+                $item->attributes()->attach($attribute);
+            }
+        }
+
         if ($request->attribute_ids && count($request->attribute_ids) > 0) {
             foreach ($request->attribute_ids as $attribute_id) {
                 $attribute = Attribute::find($attribute_id);
-                if ($attribute) {
+                if ($attribute ) {
                     $item->attributes()->attach($attribute);
                 }
             }
@@ -81,24 +87,5 @@ class CategoryController extends BaseItemController
             'status' => 'success',
             'message' => 'deleted successfully'
         ]);
-    }
-
-    protected function listWithFullPath($categories, $excludeId = 0)
-    {
-        $list = collect([]);
-        foreach ($categories as $category) {
-            $item = (object)['id' => $category->id, 'name' => $category->name];
-            if ($category->id != $excludeId) {
-                $list->push($item);
-
-                if ($category->children) {
-                    $list = $list->concat($this->listWithFullPath($category->children, $excludeId)->map(function($val) use ($item) {
-                        $val->name = $item->name.' > '.$val->name;
-                        return $val;
-                    }));
-                }
-            }
-        }
-        return $list;
     }
 }

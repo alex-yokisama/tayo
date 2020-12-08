@@ -44,11 +44,33 @@ class Category extends Model
 
     static protected function orderByRelation($column, $order)
     {
-        return self::select('brand.*');        
+        return self::select('brand.*');
     }
 
     static protected function ownSortableColumns()
     {
         return collect(['id', 'name']);
+    }
+
+    static public function listWithFullPath($excludeId = 0, $categories = null)
+    {
+        if ($categories === null) {
+            $categories = self::doesntHave('parent')->orderBy('name', 'ASC')->get();
+        }
+
+        $list = collect([]);
+        foreach ($categories as $category) {
+            $item = (object)['id' => $category->id, 'name' => $category->name];
+            if ($category->id != $excludeId) {
+                $list->push($item);
+                if ($category->children) {
+                    $list = $list->concat(self::listWithFullPath($excludeId, $category->children)->map(function($val) use ($item) {
+                        $val->name = $item->name.' > '.$val->name;
+                        return $val;
+                    }));
+                }
+            }
+        }
+        return $list;
     }
 }
