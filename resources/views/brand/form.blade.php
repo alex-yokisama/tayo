@@ -57,9 +57,9 @@
                 <x-slot name="label">
                     Bio
                 </x-slot>
-                <x-common.input.textarea name="bio">
-                    {{ (old('bio') !== null) ? (old('bio')) : (($item != null) ? ($item->bio) : '') }}
-                </x-common.input.textarea>
+                <x-common.input.textarea name="bio"
+                    value="{{ (old('bio') !== null) ? (old('bio')) : (($item != null) ? ($item->bio) : '') }}"
+                />
             </x-form.input>
             <x-form.input>
                 <x-slot name="label">
@@ -79,6 +79,15 @@
                         </option>
                     @endforeach
                 </select>
+            </x-form.input>
+            <x-form.input>
+                <x-slot name="label">
+                    Logo
+                </x-slot>
+                @livewire('item-images', [
+                    'name' => 'image',
+                    'multiple' => false,
+                    'images' => ($errors->any() ? (old('image') ? [old('image')] : []) : ($item !== null && $item->image !== null ? [$item->image] : []))])
             </x-form.input>
         </x-form.container>
     </form>

@@ -47,6 +47,7 @@ class AgentController extends BaseItemController
         $agent->name = $request->name;
         $agent->website = $request->website;
         $agent->is_retailer = $request->is_retailer;
+        $agent->image = $request->image;
         $agent->save();
 
         return redirect($request->backUrl)->with([

@@ -52,6 +52,7 @@ class BrandController extends BaseItemController
         $brand->name = $request->name;
         $brand->website = $request->website;
         $brand->bio = $request->bio;
+        $brand->image = $request->image;
 
         try {
             $country = Country::findOrFail($request->country);

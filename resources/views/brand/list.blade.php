@@ -74,6 +74,7 @@
                     <x-common.table.th>
                         <x-common.sortable sort="{{ $sort }}" order="{{ $order }}" name="name" />
                     </x-common.table.th>
+                    <x-common.table.th>logo</x-common.table.th>
                     <x-common.table.th>website</x-common.table.th>
                     <x-common.table.th>
                         <x-common.sortable sort="{{ $sort }}" order="{{ $order }}" name="country" />
@@ -85,6 +86,11 @@
                     <x-common.table.tr>
                         <x-common.table.td><input class="selectAllCheckable" type="checkbox" name="items[]" value="{{ $item->id }}"></x-common.table.td>
                         <x-common.table.td>{{ $item->name }}</x-common.table.td>
+                        <x-common.table.td>
+                            @if ($item->image != null)
+                                <div class="w-16 h-16 bg-contain bg-no-repeat bg-center" style="background-image: url('{{ $item->imageUrl }}');"></div>
+                            @endif
+                        </x-common.table.td>
                         <x-common.table.td>
                             @if ($item->website)
                                 <a href="{{ $item->website }}" target="_blank">

@@ -60,6 +60,15 @@
                     {{ (old('name') !== null) ? ((old('is_retailer')) ? 'checked' : '') : (($item !== null && $item->is_retailer) ? 'checked' : '') }} />
                 </label>
             </x-form.input>
+            <x-form.input>
+                <x-slot name="label">
+                    Logo
+                </x-slot>
+                @livewire('item-images', [
+                    'name' => 'image',
+                    'multiple' => false,
+                    'images' => ($errors->any() ? (old('image') ? [old('image')] : []) : ($item !== null && $item->image !== null ? [$item->image] : []))])
+            </x-form.input>
         </x-form.container>
     </form>
 </x-custom-layout>
