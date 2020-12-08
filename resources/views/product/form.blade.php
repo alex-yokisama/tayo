@@ -1,5 +1,5 @@
 <x-custom-layout>
-
+    
     <x-slot name="title">
         Product
     </x-slot>
@@ -186,6 +186,21 @@
                             Tags
                         </x-slot>
                         <x-common.tags name="tags[]" :items="(old('name') !== null ? old('tags') : ($item !== null && $item->tags !== null ? explode(',', $item->tags) : []))" />
+                    </x-form.input>
+                </x-form.container>
+            </x-slot>
+
+            <x-slot name="Images">
+                <x-form.container>
+                    <x-form.input>
+                        @livewire('item-images', [
+                            'name' => 'images[]',
+                            'multiple' => true,
+                            'images' => ($errors->any() ?
+                                            (old('images') ? old('images') : []) :
+                                            ($item !== null && $item->images !== null ? $item->images->map(function($item) {
+                                                return $item->path;
+                                            }) : []))])
                     </x-form.input>
                 </x-form.container>
             </x-slot>

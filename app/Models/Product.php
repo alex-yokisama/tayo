@@ -37,6 +37,19 @@ class Product extends Model
         return $this->hasMany('App\Models\ProductLink', 'product_id');
     }
 
+    public function images()
+    {
+        return $this->hasMany('App\Models\ProductImage', 'product_id')->orderBy('order', 'ASC');
+    }
+
+    public function getImageAttribute()
+    {
+        if ($this->images->count() > 0) {
+            return $this->images[0];
+        }
+        return null;
+    }
+
     public function agents()
     {
         return $this->belongsToMany('App\Models\Agent', 'product_link', 'product_id', 'agent_id');

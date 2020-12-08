@@ -59,7 +59,8 @@ class SaveRequest extends FormRequest
             'links.*.price_old' => 'integer|min:0',
             'links.*.price_new' => 'integer|min:0',
             'links.*.currency' => 'required|integer|min:1',
-            'links.*.link' => 'required|max:255'
+            'links.*.link' => 'required|max:255',
+            'images' => 'sometimes|array|distinct'
         ];
 
         if ($this->links) {

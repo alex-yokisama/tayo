@@ -118,6 +118,7 @@
                         <x-common.table.th>
                             <x-common.sortable sort="{{ $sort }}" order="{{ $order }}" name="name" />
                         </x-common.table.th>
+                        <x-common.table.th>Image</x-common.table.th>
                         <x-common.table.th>
                             <x-common.sortable sort="{{ $sort }}" order="{{ $order }}" name="sku" />
                         </x-common.table.th>
@@ -166,6 +167,11 @@
                                         <x-common.arrow.sort-up class="border-blue-900" />
                                     </span>
                                 </a>
+                            </x-common.table.td>
+                            <x-common.table.td>
+                                @if ($item->image !== null && $item->image->url !== null)
+                                    <div class="w-16 h-16 bg-contain bg-no-repeat bg-center" style="background-image: url('{{ $item->image->url }}');"></div>
+                                @endif
                             </x-common.table.td>
                             <x-common.table.td>{{ $item->sku }}</x-common.table.td>
                             <x-common.table.td>{{ $item->model }}</x-common.table.td>

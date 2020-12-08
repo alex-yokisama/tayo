@@ -12,6 +12,7 @@ use App\Models\Country;
 use App\Models\ProductPriceChange;
 use App\Models\Attribute;
 use App\Models\ProductLink;
+use App\Models\ProductImage;
 use App\Models\Currency;
 use App\Models\Agent;
 
@@ -146,6 +147,15 @@ class ProductController extends BaseItemController
             $item->tags = implode(',', $request->tags);
         } else {
             $item->tags = null;
+        }
+
+        //images
+        $item->images()->delete();
+
+        if ($request->images) {
+            foreach ($request->images as $order => $path) {
+                $item->images()->save(new ProductImage(['path' => $path, 'order' => $order]));
+            }
         }
 
         //relations
