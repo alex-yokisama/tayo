@@ -28,10 +28,7 @@ class CreateProductTable extends Migration
             $table->unsignedSmallInteger('size_length')->nullable();
             $table->unsignedSmallInteger('size_width')->nullable();
             $table->unsignedSmallInteger('size_height')->nullable();
-            $table->string('color')->nullable();
             $table->unsignedSmallInteger('weight')->nullable();
-            $table->unsignedSmallInteger('battery_size')->nullable();
-            $table->unsignedSmallInteger('battery_life')->nullable();
             $table->boolean('is_promote')->default(false);
             $table->string('excerpt')->nullable();
             $table->string('summary_main', 500)->nullable();

@@ -131,10 +131,7 @@ class ProductController extends BaseItemController
         $item->size_length = $request->size_length;
         $item->size_width = $request->size_width;
         $item->size_height = $request->size_height;
-        $item->color = $request->color;
         $item->weight = $request->weight;
-        $item->battery_size = $request->battery_size;
-        $item->battery_life = $request->battery_life;
         $item->date_publish = $request->date_publish;
         $item->is_promote = !!$request->is_promote;
 

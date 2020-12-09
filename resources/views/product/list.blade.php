@@ -254,27 +254,9 @@
                                                 </x-form.input>
                                                 <x-form.input>
                                                     <x-slot name="label">
-                                                        Color
-                                                    </x-slot>
-                                                    {{ $item->color }}
-                                                </x-form.input>
-                                                <x-form.input>
-                                                    <x-slot name="label">
                                                         Weight
                                                     </x-slot>
                                                     {{ $item->weight }}
-                                                </x-form.input>
-                                                <x-form.input>
-                                                    <x-slot name="label">
-                                                        Battery size
-                                                    </x-slot>
-                                                    {{ $item->battery_size }}
-                                                </x-form.input>
-                                                <x-form.input>
-                                                    <x-slot name="label">
-                                                        Battery life
-                                                    </x-slot>
-                                                    {{ $item->battery_life }}
                                                 </x-form.input>
                                             </x-form.container>
                                         </td>

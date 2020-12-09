@@ -106,31 +106,10 @@
                     </x-form.input>
                     <x-form.input>
                         <x-slot name="label">
-                            Color
-                        </x-slot>
-                        <x-common.input.input type="text" name="color"
-                        value="{{ (old('color') !== null) ? (old('color')) : (($item != null) ? ($item->color) : '') }}" />
-                    </x-form.input>
-                    <x-form.input>
-                        <x-slot name="label">
                             Weight (g)
                         </x-slot>
                         <x-common.input.input type="number" min="0" step="1" name="weight"
                         value="{{ (old('weight') !== null) ? (old('weight')) : (($item != null) ? ($item->weight) : '') }}" />
-                    </x-form.input>
-                    <x-form.input>
-                        <x-slot name="label">
-                            Battery size
-                        </x-slot>
-                        <x-common.input.input type="number" min="0" name="battery_size"
-                        value="{{ (old('battery_size') !== null) ? (old('battery_size')) : (($item != null) ? ($item->battery_size) : '') }}" />
-                    </x-form.input>
-                    <x-form.input>
-                        <x-slot name="label">
-                            Battery life
-                        </x-slot>
-                        <x-common.input.input type="number" min="0" name="battery_life"
-                        value="{{ (old('battery_life') !== null) ? (old('battery_life')) : (($item != null) ? ($item->battery_life) : '') }}" />
                     </x-form.input>
                     <x-form.input>
                         <x-slot name="label">
