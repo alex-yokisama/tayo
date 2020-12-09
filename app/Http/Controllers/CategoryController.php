@@ -46,11 +46,7 @@ class CategoryController extends BaseItemController
             $item->parent()->associate($parent);
         }
 
-        $item->save();
-        $item->refresh();
-
         $item->attributes()->detach();
-
         if ($parent) {
             foreach ($parent->attributes as $attribute) {
                 $item->attributes()->attach($attribute);
@@ -67,11 +63,28 @@ class CategoryController extends BaseItemController
         }
 
         $item->save();
+        $item->refresh();
+
+        $this->updateChildAttributes($item);
 
         return redirect($request->backUrl)->with([
             'status' => 'success',
             'message' => 'saved successfully'
         ]);
+    }
+
+    private function updateChildAttributes($item)
+    {
+        foreach ($item->children as $child) {
+            foreach ($item->attributes as $attribute) {
+                if (!$child->attributes->contains($attribute)) {
+                    $child->attributes()->attach($attribute);
+                }
+            }
+            $child->save();
+            $child->refresh();
+            $this->updateChildAttributes($child);
+        }
     }
 
     public function delete(Requests\DeleteRequest $request)
