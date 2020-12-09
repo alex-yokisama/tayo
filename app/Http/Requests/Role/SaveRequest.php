@@ -42,13 +42,9 @@ class SaveRequest extends FormRequest
     protected function prepareForValidation()
     {
         if ($this->id && preg_match('/^[0-9]+$/', $this->id)) {
-            $this->merge([
-                'id' => (int)$this->id,
-            ]);
+            $this->id = (int)$this->id;
         } else {
-            $this->merge([
-                'id' => null,
-            ]);
+            $this->id = null;
         }
 
         if (!$this->permissions) {

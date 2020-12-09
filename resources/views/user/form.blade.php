@@ -43,19 +43,33 @@
                 <x-slot name="label">
                     Name
                 </x-slot>
-                {{ $item->name }}
+                <x-common.input.input type="text" name="name"
+                value="{{ $errors->any() ? (old('name')) : (($item !== null) ? ($item->name) : '') }}" />
             </x-form.input>
             <x-form.input>
                 <x-slot name="label">
                     Email
                 </x-slot>
-                {{ $item->email }}
+                <x-common.input.input type="email" name="email"
+                value="{{ $errors->any() ? (old('email')) : (($item !== null) ? ($item->email) : '') }}" />
+            </x-form.input>
+            <x-form.input>
+                <x-slot name="label">
+                    Password
+                </x-slot>
+                <x-common.input.input type="password" name="password"/>
+            </x-form.input>
+            <x-form.input>
+                <x-slot name="label">
+                    Confirm password
+                </x-slot>
+                <x-common.input.input type="password" name="password_confirmation"/>
             </x-form.input>
             <x-form.input>
                 <x-slot name="label">
                     Roles
                 </x-slot>
-                <div class="grid gap-1 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                <div class="grid gap-1 gap-x-4 grid-cols-2 md:grid-cols-3">
                     @foreach ($roles as $role)
                         <label>
                             <input type="checkbox" name="roles[]" value="{{ $role->id }}"

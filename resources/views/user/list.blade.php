@@ -11,6 +11,10 @@
     <x-slot name="top">
         <div class="flex flex-row items-center justify-between">
             <x-common.h.h1>Users</x-common.h.h1>
+            <x-common.button.group>
+                <x-common.a.a x-data="{}" @click.prevent="$dispatch('show-delete-items-modal');" class="text-red-500" href="#">Delete</x-common.a.a>
+                <x-common.button.a href="/admin/user?backUrl={{ urlencode($backUrl) }}">New</x-common.button.a>
+            </x-common.button.group>
         </div>
 
         @if (session('status') == 'success')
@@ -54,8 +58,12 @@
         </x-slot>
 
         {{ $items->withQueryString()->links('vendor.pagination.custom-tailwind', ['allowedPerPages' => $allowedPerPages]) }}
+        <form class="deleteItemsForm" action="delete_users" method="post">
+            @csrf
+            <input type="hidden" name="backUrl" value="{{ $backUrl }}">
             <x-common.table.table x-data="tableComponent()">
                 <x-slot name="thead">
+                    <x-common.table.th><input type="checkbox" @change="check" x-bind:checked="checked"></x-common.table.th>
                     <x-common.table.th>
                         <x-common.sortable sort="{{ $sort }}" order="{{ $order }}" name="name" />
                     </x-common.table.th>
@@ -67,6 +75,7 @@
                 </x-slot>
                 @foreach ($items as $item)
                     <x-common.table.tr>
+                        <x-common.table.td><input class="selectAllCheckable" type="checkbox" name="items[]" value="{{ $item->id }}"></x-common.table.td>
                         <x-common.table.td>{{ $item->name }}</x-common.table.td>
                         <x-common.table.td>{{ $item->email }}</x-common.table.td>
                         <x-common.table.td>
@@ -89,8 +98,14 @@
             <script>
                 function tableComponent() {
                     return {
+                        checked: false,
                         sort: '{{ $sort }}',
                         order: '{{ $order }}',
+                        check($event) {
+                            [...document.querySelectorAll("input.selectAllCheckable")].map((el) => {
+                                el.checked = $event.target.checked;
+                            });
+                        },
                         applySort(targetSort) {
                             let url = new URL(window.location);
                             url.searchParams.delete('order');
@@ -117,6 +132,41 @@
                     }
                 }
             </script>
+        </form>
         {{ $items->withQueryString()->links('vendor.pagination.custom-tailwind', ['allowedPerPages' => $allowedPerPages]) }}
     </x-list>
+
+    @push('modals')
+        <div style="display: none;" x-data="deleteItemsModal()" x-show="show" x-on:show-delete-items-modal.window="showModal" class="deleteItemsModal fixed w-full h-full z-20 bg-black bg-opacity-50 top-0 left-0 p-4 sm:py-28">
+            <div @click.away="show = false" class="relative bg-white w-full sm:w-3/4 md:w-1/2 mx-auto">
+                <span @click="show = false" class="absolute top-0 right-0 text-2xl mx-3 font-bold cursor-pointer">&times;</span>
+                <div class="p-6 pb-4">
+                    <p>Delete selected items? </p>
+                    <x-common.button.group class="justify-end">
+                        <x-common.a.a href="#" class="text-red-500" @click.prevent="submitDelete">
+                            Delete
+                        </x-common.a.a>
+                        <x-common.a.a href="#" @click.prevent="show = false">
+                            Cancel
+                        </x-common.a.a>
+                    </x-common.button.group>
+                </div>
+            </div>
+        </div>
+        <script>
+            function deleteItemsModal() {
+                return {
+                    show: false,
+                    submitDelete() {
+                        document.querySelector('form.deleteItemsForm').submit()
+                    },
+                    showModal() {
+                        if ([...document.querySelectorAll('form.deleteItemsForm input[type=checkbox][name]:checked')].length > 0) {
+                            this.show = true;
+                        }
+                    }
+                }
+            }
+        </script>
+    @endpush
 </x-custom-layout>

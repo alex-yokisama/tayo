@@ -5,7 +5,7 @@ namespace App\Http\Requests\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class GetFormRequest extends FormRequest
+class DeleteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,15 +25,16 @@ class GetFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'sometimes|integer'
+            'items' => 'required|array',
+            'items.*' => 'integer'
         ];
     }
 
     protected function prepareForValidation()
     {
-        if (!$this->backUrl) {
+        if (!$this->items) {
             $this->merge([
-                'backUrl' => '/admin/users',
+                'items' => [],
             ]);
         }
     }

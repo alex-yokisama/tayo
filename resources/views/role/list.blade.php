@@ -12,14 +12,7 @@
         <div class="flex flex-row items-center justify-between">
             <x-common.h.h1>Roles</x-common.h.h1>
             <x-common.button.group>
-                <x-common.a.a x-data="deleteItemsButton()" @click.prevent="$dispatch('show-delete-items-modal');" class="text-red-500" href="#">Delete</x-common.a.a>
-                <script>
-                    function deleteItemsButton() {
-                        return {
-                            show: false
-                        }
-                    }
-                </script>
+                <x-common.a.a x-data="{}" @click.prevent="$dispatch('show-delete-items-modal');" class="text-red-500" href="#">Delete</x-common.a.a>
                 <x-common.button.a href="/admin/role?backUrl={{ urlencode($backUrl) }}">New</x-common.button.a>
             </x-common.button.group>
         </div>

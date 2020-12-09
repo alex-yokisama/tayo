@@ -28,32 +28,27 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'can:use admin panel'])-
     });
 
     $entities = collect([
-        ['name' => 'role', 'plural' => 'roles', 'controller' => Controllers\RoleController::class, 'viewable' => true, 'updatable' => true, 'deletable' => true],
-        ['name' => 'user', 'plural' => 'users', 'controller' => Controllers\UserController::class, 'viewable' => true, 'updatable' => true, 'deletable' => false],
-        ['name' => 'country', 'plural' => 'countries', 'controller' => Controllers\CountryController::class, 'viewable' => true, 'updatable' => true, 'deletable' => true],
-        ['name' => 'brand', 'plural' => 'brands', 'controller' => Controllers\BrandController::class, 'viewable' => true, 'updatable' => true, 'deletable' => true],
-        ['name' => 'measure', 'plural' => 'measures', 'controller' => Controllers\MeasureController::class, 'viewable' => true, 'updatable' => true, 'deletable' => true],
-        ['name' => 'agent', 'plural' => 'agents', 'controller' => Controllers\AgentController::class, 'viewable' => true, 'updatable' => true, 'deletable' => true],
-        ['name' => 'currency', 'plural' => 'currencies', 'controller' => Controllers\CurrencyController::class, 'viewable' => true, 'updatable' => true, 'deletable' => true],
-        ['name' => 'attribute', 'plural' => 'attributes', 'controller' => Controllers\AttributeController::class, 'viewable' => true, 'updatable' => true, 'deletable' => true],
-        ['name' => 'category', 'plural' => 'categories', 'controller' => Controllers\CategoryController::class, 'viewable' => true, 'updatable' => true, 'deletable' => true],
+        ['name' => 'role', 'plural' => 'roles', 'controller' => Controllers\RoleController::class],
+        ['name' => 'user', 'plural' => 'users', 'controller' => Controllers\UserController::class],
+        ['name' => 'country', 'plural' => 'countries', 'controller' => Controllers\CountryController::class],
+        ['name' => 'brand', 'plural' => 'brands', 'controller' => Controllers\BrandController::class],
+        ['name' => 'measure', 'plural' => 'measures', 'controller' => Controllers\MeasureController::class],
+        ['name' => 'agent', 'plural' => 'agents', 'controller' => Controllers\AgentController::class],
+        ['name' => 'currency', 'plural' => 'currencies', 'controller' => Controllers\CurrencyController::class],
+        ['name' => 'attribute', 'plural' => 'attributes', 'controller' => Controllers\AttributeController::class],
+        ['name' => 'category', 'plural' => 'categories', 'controller' => Controllers\CategoryController::class],
+        ['name' => 'product', 'plural' => 'products', 'controller' => Controllers\ProductController::class],
     ])->map(function ($item) {
         return (object)$item;
     });
     foreach ($entities as $entity) {
-        if ($entity->viewable) {
-            Route::middleware(['can:view '.$entity->plural])->group(function() use ($entity) {
-                Route::get($entity->plural, [$entity->controller, 'list']);
-                if ($entity->updatable) {
-                    Route::middleware(['can:update '.$entity->plural])->group(function() use ($entity) {
-                        Route::get($entity->name, [$entity->controller, 'form']);
-                        Route::post($entity->name, [$entity->controller, 'save']);
-                    });
-                }
-                if ($entity->deletable) {
-                    Route::middleware(['can:delete '.$entity->plural])->post('delete_'.$entity->plural, [$entity->controller, 'delete']);
-                }
+        Route::middleware(['can:view '.$entity->plural])->group(function() use ($entity) {
+            Route::get($entity->plural, [$entity->controller, 'list']);
+            Route::middleware(['can:update '.$entity->plural])->group(function() use ($entity) {
+                Route::get($entity->name, [$entity->controller, 'form']);
+                Route::post($entity->name, [$entity->controller, 'save']);
             });
-        }
+            Route::middleware(['can:delete '.$entity->plural])->post('delete_'.$entity->plural, [$entity->controller, 'delete']);
+        });
     }
 });

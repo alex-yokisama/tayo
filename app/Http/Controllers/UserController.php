@@ -7,6 +7,7 @@ use App\Http\Requests\User as Requests;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends BaseItemController
 {
@@ -42,13 +43,10 @@ class UserController extends BaseItemController
     public function form(Requests\GetFormRequest $request)
     {
         $user = User::find($request->id);
-        if (!$user) {
-            return redirect($request->backUrl)->withErrors(['404', 'user not found']);
-        }
 
         $formData = $this->getFormData($request);
         $formData['item'] = $user;
-        $formData['roles'] = Role::all();
+        $formData['roles'] = Role::orderByRaw('CASE WHEN name="admin" THEN 0 ELSE 1 END ASC')->orderBy('name', 'ASC')->get();
 
         return view('user.form', $formData);
     }
@@ -58,8 +56,20 @@ class UserController extends BaseItemController
         $user = User::find($request->id);
 
         if (!$user) {
-            return redirect($request->backUrl)->withErrors(['404', 'user not found']);
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+        } else {
+            $user->name = $request->name;
+            $user->email = $request->email;
+            if ($request->password) {
+                $user->password = Hash::make($request->password);
+            }
         }
+
+        $user->save();
 
         $roles = Role::whereIn('id', $request->roles)->get();
         $user->syncRoles($roles);
@@ -67,6 +77,26 @@ class UserController extends BaseItemController
         return redirect($request->backUrl)->with([
             'status' => 'success',
             'message' => 'saved successfully'
+        ]);
+    }
+
+    public function delete(Requests\DeleteRequest $request)
+    {
+        $userIds = collect($request->items)->filter(function($item) use ($request) {
+            return $item != $request->user()->id;
+        });
+
+        $users = User::whereIn('id', $userIds)->get();
+
+        foreach ($users as $user) {
+            $user->deleteProfilePhoto();
+            $user->tokens->each->delete();
+            $user->delete();
+        }
+
+        return redirect($request->backUrl)->with([
+            'status' => 'success',
+            'message' => 'deleted successfully'
         ]);
     }
 }
