@@ -2,41 +2,10 @@
 
 namespace App\Http\Requests\Category;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseDeleteRequest;
 use Illuminate\Validation\Rule;
 
-class DeleteRequest extends FormRequest
+class DeleteRequest extends BaseDeleteRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        var_dump($this->attributes);
-        return [
-            'items' => 'required|array',
-            'items.*' => 'integer'
-        ];
-    }
-
-    protected function prepareForValidation()
-    {
-        if (!$this->items) {
-            $this->merge([
-                'items' => [],
-            ]);
-        }
-    }
 }

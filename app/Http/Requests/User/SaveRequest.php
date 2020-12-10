@@ -2,27 +2,12 @@
 
 namespace App\Http\Requests\User;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Laravel\Fortify\Rules\Password;
+use App\Http\Requests\BaseSaveRequest;
+use Illuminate\Validation\Rule;
 
-class SaveRequest extends FormRequest
+class SaveRequest extends BaseSaveRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         $rules = [
@@ -43,14 +28,5 @@ class SaveRequest extends FormRequest
         }
 
         return $rules;
-    }
-
-    protected function prepareForValidation()
-    {
-        if ($this->id && preg_match('/^[0-9]+$/', $this->id)) {
-            $this->id = (int)$this->id;
-        } else {
-            $this->id = null;
-        }
     }
 }

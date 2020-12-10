@@ -2,31 +2,16 @@
 
 namespace App\Http\Requests\Attribute;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseSaveRequest;
 use Illuminate\Validation\Rule;
 
-class SaveRequest extends FormRequest
+class SaveRequest extends BaseSaveRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         $rules = [
             'type' => 'required|integer|min:0|max:5',
-            'name' => ['required', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
         ];
 
         $rule = Rule::unique('attribute');
@@ -37,7 +22,7 @@ class SaveRequest extends FormRequest
 
         if ($this->type == 4 || $this->type == 5) {
             $rules['options'] = 'required|array|distinct';
-            $rules['options.*.name'] = 'max:255';
+            $rules['options.*.name'] = 'string|max:255';
             $rules['options.*.id'] = 'integer';
         }
         if ($this->type == 0) {
@@ -49,18 +34,9 @@ class SaveRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        if ($this->id && preg_match('/^[0-9]+$/', $this->id)) {
-            $this->merge([
-                'id' => (int)$this->id,
-            ]);
-        } else {
-            $this->merge([
-                'id' => null,
-            ]);
-        }
+        parent::prepareForValidation();
 
-        $this->merge([
-            'options' => collect($this->options)->map(function ($item, $index) {
+        $this->options = collect($this->options)->map(function ($item, $index) {
                 if (is_string($index)) {
                     return ['id' => intval(str_replace('id_', '', $index)), 'name' => $item];
                 } else {
@@ -68,7 +44,6 @@ class SaveRequest extends FormRequest
                 }
             })->filter(function($item) {
                 return strlen($item['name']) > 0;
-            })->values()->unique('name')->toArray(),
-        ]);
+            })->values()->unique('name')->toArray();
     }
 }

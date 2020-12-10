@@ -40,22 +40,16 @@ class BaseListRequest extends FormRequest
     protected function prepareSorts()
     {
         if (!$this->allowedSorts()->contains($this->sort)) {
-            $this->merge([
-                'sort' => $this->defaultSort(),
-            ]);
+            $this->sort = $this->defaultSort();
         }
     }
 
     protected function prepareSortOrder()
     {
         if (strtoupper($this->order) != 'DESC') {
-            $this->merge([
-                'order' => 'ASC',
-            ]);
+            $this->order = 'ASC';
         } else {
-            $this->merge([
-                'order' => 'DESC',
-            ]);
+            $this->order = 'DESC';
         }
         if ($this->sort == 'id') {
             $this->order = 'DESC';
@@ -65,9 +59,7 @@ class BaseListRequest extends FormRequest
     protected function preparePerPage()
     {
         if (!$this->allowedPerPages()->contains($this->perPage)) {
-            $this->merge([
-                'perPage' => $this->defaultPerPage(),
-            ]);
+            $this->perPage = $this->defaultPerPage();
         }
     }
 

@@ -7,11 +7,6 @@ use Illuminate\Validation\Rule;
 
 class ListRequest extends BaseListRequest
 {
-    public function authorize()
-    {
-        return true;
-    }
-
     public function rules()
     {
         $rules = [
@@ -30,7 +25,7 @@ class ListRequest extends BaseListRequest
             'brands' => 'sometimes|array',
             'brands.*' => 'integer',
             'page' => 'sometimes|integer',
-            'perPage' => 'required|integer',
+            'perPage' => 'sometimes|integer',
         ];
         return $rules;
     }

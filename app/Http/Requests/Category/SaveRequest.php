@@ -2,33 +2,18 @@
 
 namespace App\Http\Requests\Category;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseSaveRequest;
 use Illuminate\Validation\Rule;
 
-class SaveRequest extends FormRequest
+class SaveRequest extends BaseSaveRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         $rules = [
             'parent' => 'sometimes|nullable|integer',
             'attribute_ids' => 'sometimes|array|distinct',
             'attribute_ids.*' => 'integer',
-            'name' => ['required', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
         ];
 
         $rule = Rule::unique('category');
@@ -42,20 +27,9 @@ class SaveRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        if ($this->id && preg_match('/^[0-9]+$/', $this->id)) {
-            $this->merge([
-                'id' => (int)$this->id,
-            ]);
-        } else {
-            $this->merge([
-                'id' => null,
-            ]);
-        }
-
+        parent::prepareForValidation();
         if ($this->parent == $this->id) {
-            $this->merge([
-                'parent' => null,
-            ]);
+            $this->parent = null;
         }
     }
 }

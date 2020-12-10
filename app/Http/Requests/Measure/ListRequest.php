@@ -7,18 +7,13 @@ use Illuminate\Validation\Rule;
 
 class ListRequest extends BaseListRequest
 {
-    public function authorize()
-    {
-        return true;
-    }
-
     public function rules()
     {
         return [
             'name' => 'sometimes|max:255',
             'short_name' => 'sometimes|max:5',
             'page' => 'sometimes|integer',
-            'perPage' => 'required|integer'
+            'perPage' => 'sometimes|integer'
         ];
     }
 
