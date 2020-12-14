@@ -263,6 +263,23 @@
                         </x-slot>
                         @livewire('country-autocomplete-multiple', ['name' => 'countries[]', 'items' => ($errors->any() ? old('countries') : ($item !== null ? $item->targetCountries : []))])
                     </x-form.input>
+                    <x-form.input>
+                        <x-slot name="label">
+                            Websites
+                        </x-slot>
+                        @foreach ($websites as $website)
+                            <label class="block">
+                                <input type="checkbox" name="websites[]" value="{{ $website->id }}"
+                                    {{
+                                        $errors->any() ?
+                                        (collect(old('websites'))->contains($website->id) ? 'checked' : '') :
+                                        (($item !== null && $item->websites->contains($website)) ? 'checked' : '')
+                                    }}
+                                >
+                                {{ $website->url }}
+                            </label>
+                        @endforeach
+                    </x-form.input>
                 </x-form.container>
             </x-slot>
 

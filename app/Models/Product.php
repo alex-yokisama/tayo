@@ -43,6 +43,11 @@ class Product extends Model
         return $this->belongsToMany('App\Models\Country', 'product_to_country', 'product_id', 'country_id');
     }
 
+    public function websites()
+    {
+        return $this->belongsToMany('App\Models\Website', 'product_to_website', 'product_id', 'website_id');
+    }
+
     public function links()
     {
         return $this->hasMany('App\Models\ProductLink', 'product_id');

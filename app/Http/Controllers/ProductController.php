@@ -15,6 +15,7 @@ use App\Models\ProductLink;
 use App\Models\ProductImage;
 use App\Models\Currency;
 use App\Models\Agent;
+use App\Models\Website;
 
 class ProductController extends BaseItemController
 {
@@ -120,6 +121,7 @@ class ProductController extends BaseItemController
         $formData['countries'] = Country::all();
         $formData['currencies'] = Currency::all();
         $formData['categories'] = Category::listWithFullPath();
+        $formData['websites'] = Website::all();
 
         return view('product.form', $formData);
     }
@@ -221,6 +223,16 @@ class ProductController extends BaseItemController
                 $country = Country::find($countryId);
                 if ($country) {
                     $item->targetCountries()->attach($country);
+                }
+            }
+        }
+
+        $item->websites()->detach();
+        if ($request->websites) {
+            foreach ($request->websites as $websiteId) {
+                $website = Website::find($websiteId);
+                if ($website) {
+                    $item->websites()->attach($website);
                 }
             }
         }
