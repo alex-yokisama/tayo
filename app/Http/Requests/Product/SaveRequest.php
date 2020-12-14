@@ -44,6 +44,7 @@ class SaveRequest extends BaseSaveRequest
             'links.*.price_new' => 'integer|min:0',
             'links.*.currency' => 'required|integer|min:1',
             'links.*.link' => 'required|string|url|max:255',
+            'links.*.link' => 'sometimes|nullable|string|max:500',
             'images' => 'sometimes|array|distinct'
         ];
 

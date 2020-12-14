@@ -53,6 +53,7 @@ class ProductLinks extends Component
             'price_new' => '',
             'currency' => '',
             'link' => '',
+            'description' => '',
             'is_primary' => false
         ]);
     }

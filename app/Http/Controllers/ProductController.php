@@ -299,7 +299,8 @@ class ProductController extends BaseItemController
                     'is_primary' => $request->primary_link == $key,
                     'price_old' => $link->price_old,
                     'price_new' => $link->price_new,
-                    'link' => $link->link
+                    'link' => $link->link,
+                    'description' => $link->description
                 ]));
             }
         }

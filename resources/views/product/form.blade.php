@@ -279,6 +279,7 @@
                             'price_new' => $item->price_new,
                             'currency' => $item->currency->id,
                             'link' => $item->link,
+                            'description' => $item->description,
                             'is_primary' => $item->is_primary
                         ];
                     })->toArray()])
