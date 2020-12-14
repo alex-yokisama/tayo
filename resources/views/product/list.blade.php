@@ -186,6 +186,9 @@
                             <x-common.table.td>{{ $item->is_promote ? '+' : '-' }}</x-common.table.td>
                             <x-common.table.td>
                                 <x-common.button.group  class="justify-end">
+                                    <x-common.a.a href="product?copy_id={{ $item->id }}&backUrl={{ urlencode($backUrl) }}" class="text-blue-700">
+                                        Copy
+                                    </x-common.a.a>
                                     <x-common.button.a href="/admin/product?id={{ $item->id }}&backUrl={{ urlencode($backUrl) }}">
                                         Edit
                                     </x-common.button.a>

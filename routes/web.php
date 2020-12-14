@@ -24,7 +24,7 @@ Route::get('/', function () {
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'can:use admin panel'])->group(function () {
     Route::get('/', function () {
-        return redirect('admin/roles');
+        return redirect('admin/products');
     });
 
     $entities = collect([

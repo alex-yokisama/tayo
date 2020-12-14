@@ -21,6 +21,8 @@ class CreateProductLinkTable extends Migration
             $table->boolean('is_primary')->default(false);
             $table->double('price_old', 8, 2);
             $table->double('price_new', 8, 2);
+            $table->string('link');
+            $table->string('description', 500)->nullable();
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');

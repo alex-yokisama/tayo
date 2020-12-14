@@ -105,22 +105,17 @@ class ProductController extends BaseItemController
         return view('product.list', $listData);
     }
 
-    public function copy(Requests\CopyRequest $request) {
-        $formData = $this->getFormData($request);
-        $formData['item'] = Product::findOrFail($request->id);
-        $formData['brands'] = Brand::all();
-        $formData['countries'] = Country::all();
-        $formData['currencies'] = Currency::all();
-        $formData['categories'] = Category::listWithFullPath();
-        $formData['is_copy'] = true;
-
-        return view('product.form', $formData);
-    }
-
     public function form(Requests\GetFormRequest $request)
     {
         $formData = $this->getFormData($request);
-        $formData['item'] = Product::find($request->id);
+
+        if ($request->copy_id) {
+            $formData['item'] = Product::findOrFail($request->copy_id);
+            $formData['is_copy'] = true;
+        } else {
+            $formData['item'] = Product::find($request->id);
+        }
+
         $formData['brands'] = Brand::all();
         $formData['countries'] = Country::all();
         $formData['currencies'] = Currency::all();
@@ -347,13 +342,13 @@ class ProductController extends BaseItemController
 
     public function delete(Requests\DeleteRequest $request)
     {
-        // try {
+        try {
             Product::whereIn('id', $request->items)->delete();
-        // } catch (\Illuminate\Database\QueryException $ex) {
-        //     return back()->withErrors([
-        //         'delete' => 'Unable to delete. Selected items are used in other objects.'
-        //     ])->withInput();
-        // }
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return back()->withErrors([
+                'delete' => 'Unable to delete. Selected items are used in other objects.'
+            ])->withInput();
+        }
         return redirect($request->backUrl)->with([
             'status' => 'success',
             'message' => 'deleted successfully'

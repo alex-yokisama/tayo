@@ -13,8 +13,8 @@
             <x-common.h.h1>Product</x-common.h.h1>
             <x-common.button.group>
                 <x-common.a.a :href="$backUrl">Cancel</x-common.a.a>
-                @if ($item !== null)
-                    <x-common.a.a href="copy_product?id={{ $item->id }}&backUrl={{ urlencode($backUrl) }}" class="text-blue-600">Copy</x-common.a.a>
+                @if (!$is_copy && $item !== null)
+                    <x-common.a.a href="product?copy_id={{ $item->id }}&backUrl={{ urlencode($backUrl) }}" class="text-blue-700">Copy</x-common.a.a>
                 @endif
                 <x-common.button.a href="#" x-data="{}" @click.prevent="$dispatch('submit-save-form')">Save</x-common.button.a>
             </x-common.button.group>
