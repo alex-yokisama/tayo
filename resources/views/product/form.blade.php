@@ -13,6 +13,9 @@
             <x-common.h.h1>Product</x-common.h.h1>
             <x-common.button.group>
                 <x-common.a.a :href="$backUrl">Cancel</x-common.a.a>
+                @if ($item !== null)
+                    <x-common.a.a href="copy_product?id={{ $item->id }}&backUrl={{ urlencode($backUrl) }}" class="text-blue-600">Copy</x-common.a.a>
+                @endif
                 <x-common.button.a href="#" x-data="{}" @click.prevent="$dispatch('submit-save-form')">Save</x-common.button.a>
             </x-common.button.group>
         </div>
@@ -36,7 +39,7 @@
 
     <form class="editItemForm overflow-x-auto overflow-y-visible" action="" method="post" x-data="{}" @submit-save-form.window="document.querySelector('form.editItemForm').submit()">
         @csrf
-        <input type="hidden" name="id" value="{{ isset($item) ? $item->id : ''}}">
+        <input type="hidden" name="id" value="{{ (!$is_copy && $item !== null) ? $item->id : ''}}">
         <input type="hidden" name="backUrl" value="{{ $backUrl }}">
         <x-common.tabs>
             <x-slot name="General">
@@ -75,6 +78,14 @@
                         </x-slot>
                         <x-common.input.input type="number" min="0" name="price_msrp"
                         value="{{ (old('price_msrp') !== null) ? (old('price_msrp')) : (($item != null) ? ($item->price_msrp) : '') }}" />
+                        <x-common.input.select
+                            name="currency_msrp"
+                            :required="true"
+                            selected="{{ $errors->any() ? old('currency_msrp') : ($item !== null ? $item->currency_msrp : '') }}"
+                            :options="($currencies->map(function($item) {
+                                return (object)['key' => $item->id, 'value' => $item->symbol];
+                            })->toArray())"
+                        />
                     </x-form.input>
                     <x-form.input>
                         <x-slot name="label">
@@ -82,6 +93,14 @@
                         </x-slot>
                         <x-common.input.input type="number" min="0" name="price_current"
                         value="{{ (old('price_current') !== null) ? (old('price_current')) : (($item != null) ? ($item->price_current) : '') }}" />
+                        <x-common.input.select
+                            name="currency_current"
+                            :required="true"
+                            selected="{{ $errors->any() ? old('currency_current') : ($item !== null ? $item->currency_current : '') }}"
+                            :options="($currencies->map(function($item) {
+                                return (object)['key' => $item->id, 'value' => $item->symbol];
+                            })->toArray())"
+                        />
                     </x-form.input>
                     <x-form.input>
                         <x-slot name="label">
@@ -106,31 +125,10 @@
                     </x-form.input>
                     <x-form.input>
                         <x-slot name="label">
-                            Color
-                        </x-slot>
-                        <x-common.input.input type="text" name="color"
-                        value="{{ (old('color') !== null) ? (old('color')) : (($item != null) ? ($item->color) : '') }}" />
-                    </x-form.input>
-                    <x-form.input>
-                        <x-slot name="label">
                             Weight (g)
                         </x-slot>
                         <x-common.input.input type="number" min="0" step="1" name="weight"
                         value="{{ (old('weight') !== null) ? (old('weight')) : (($item != null) ? ($item->weight) : '') }}" />
-                    </x-form.input>
-                    <x-form.input>
-                        <x-slot name="label">
-                            Battery size
-                        </x-slot>
-                        <x-common.input.input type="number" min="0" name="battery_size"
-                        value="{{ (old('battery_size') !== null) ? (old('battery_size')) : (($item != null) ? ($item->battery_size) : '') }}" />
-                    </x-form.input>
-                    <x-form.input>
-                        <x-slot name="label">
-                            Battery life
-                        </x-slot>
-                        <x-common.input.input type="number" min="0" name="battery_life"
-                        value="{{ (old('battery_life') !== null) ? (old('battery_life')) : (($item != null) ? ($item->battery_life) : '') }}" />
                     </x-form.input>
                     <x-form.input>
                         <x-slot name="label">
@@ -294,6 +292,7 @@
                     <x-common.table.table>
                         <x-slot name="thead">
                             <x-common.table.th>Date</x-common.table.th>
+                            <x-common.table.th>Price type</x-common.table.th>
                             <x-common.table.th>Old price</x-common.table.th>
                             <x-common.table.th>New price</x-common.table.th>
                             <x-common.table.th>Reason</x-common.table.th>
@@ -301,8 +300,9 @@
                         @foreach ($item->priceChanges as $change)
                             <x-common.table.tr>
                                 <x-common.table.td>{{ $change->created_at }}</x-common.table.td>
-                                <x-common.table.td>{{ $change->price_old }}</x-common.table.td>
-                                <x-common.table.td>{{ $change->price_new }}</x-common.table.td>
+                                <x-common.table.td>{{ $change->price_type }}</x-common.table.td>
+                                <x-common.table.td>{{ $change->price_old }} {{ $change->oldCurrency->symbol }}</x-common.table.td>
+                                <x-common.table.td>{{ $change->price_new }} {{ $change->newCurrency->symbol }}</x-common.table.td>
                                 <x-common.table.td>{{ $change->reason }}</x-common.table.td>
                             </x-common.table.tr>
                         @endforeach

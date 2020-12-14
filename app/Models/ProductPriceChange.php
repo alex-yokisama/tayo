@@ -11,11 +11,21 @@ class ProductPriceChange extends Model
     use HasFactory;
 
     protected $table = 'product_price_change';
-    protected $fillable = ['product_id', 'price_old', 'price_new', 'reason'];
+    protected $fillable = ['product_id', 'price_type', 'currency_old_id', 'currency_new_id', 'price_old', 'price_new', 'reason'];
 
     public function product()
     {
         return $this->belongsTo('App\Models\Product', 'product_id');
+    }
+
+    public function oldCurrency()
+    {
+        return $this->belongsTo('App\Models\Currency', 'currency_old_id');
+    }
+
+    public function newCurrency()
+    {
+        return $this->belongsTo('App\Models\Currency', 'currency_new_id');
     }
 
     public function getCreatedAtAttribute($date)

@@ -24,6 +24,7 @@ class BaseItemController extends Controller
     protected function getFormData(Request $request)
     {
         return [
+            'is_copy' => false,
             'backUrl' => $request->backUrl,
             'sidebarLinks' => SidebarLinksService::getLinks($this->baseUrl)
         ];

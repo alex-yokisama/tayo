@@ -16,12 +16,17 @@ class CreateProductPriceChangeTable extends Migration
         Schema::create('product_price_change', function (Blueprint $table) {
             $table->id()->autoincrement();
             $table->foreignId('product_id');
+            $table->string('price_type');
             $table->double('price_old', 8, 2);
+            $table->foreignId('currency_old_id');
             $table->double('price_new', 8, 2);
+            $table->foreignId('currency_new_id');
             $table->string('reason')->nullable();
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('product');
+            $table->foreign('currency_old_id')->references('id')->on('currency');
+            $table->foreign('currency_new_id')->references('id')->on('currency');
         });
     }
 

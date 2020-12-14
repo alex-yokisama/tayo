@@ -23,9 +23,9 @@ class CreateProductLinkTable extends Migration
             $table->double('price_new', 8, 2);
             $table->timestamps();
 
-            $table->foreign('product_id')->references('id')->on('product');
+            $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
             $table->foreign('currency_id')->references('id')->on('currency');
-            $table->foreign('agent_id')->references('id')->on('agent');
+            $table->foreign('agent_id')->references('id')->on('agent')->onDelete('cascade');
         });
     }
 

@@ -24,14 +24,13 @@ class CreateProductTable extends Migration
             $table->string('model_family')->nullable();
             $table->date('date_publish');
             $table->double('price_msrp', 8, 2)->default(0);
+            $table->foreignId('currency_msrp')->nullable();
             $table->double('price_current', 8, 2)->default(0);
+            $table->foreignId('currency_current')->nullable();
             $table->unsignedSmallInteger('size_length')->nullable();
             $table->unsignedSmallInteger('size_width')->nullable();
             $table->unsignedSmallInteger('size_height')->nullable();
-            $table->string('color')->nullable();
             $table->unsignedSmallInteger('weight')->nullable();
-            $table->unsignedSmallInteger('battery_size')->nullable();
-            $table->unsignedSmallInteger('battery_life')->nullable();
             $table->boolean('is_promote')->default(false);
             $table->string('excerpt')->nullable();
             $table->string('summary_main', 500)->nullable();
@@ -44,6 +43,9 @@ class CreateProductTable extends Migration
             $table->foreign('category_id')->references('id')->on('category');
             $table->foreign('brand_id')->references('id')->on('brand');
             $table->foreign('country_id')->references('id')->on('country');
+
+            $table->foreign('currency_msrp')->references('id')->on('currency');
+            $table->foreign('currency_current')->references('id')->on('currency');
         });
     }
 

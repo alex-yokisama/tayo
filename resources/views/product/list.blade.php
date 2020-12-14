@@ -181,8 +181,8 @@
                             <x-common.table.td>{{ $item->country !== null ? $item->country->name : '' }}</x-common.table.td>
                             <x-common.table.td class="whitespace-no-wrap">{{ $item->created_at }}</x-common.table.td>
                             <x-common.table.td class="whitespace-no-wrap">{{ $item->date_publish }}</x-common.table.td>
-                            <x-common.table.td>{{ $item->price_msrp }}</x-common.table.td>
-                            <x-common.table.td>{{ $item->price_current }}</x-common.table.td>
+                            <x-common.table.td>{{ $item->price_msrp }} {{ $item->msrpCurrency->symbol }}</x-common.table.td>
+                            <x-common.table.td>{{ $item->price_current }} {{ $item->currentCurrency->symbol }}</x-common.table.td>
                             <x-common.table.td>{{ $item->is_promote ? '+' : '-' }}</x-common.table.td>
                             <x-common.table.td>
                                 <x-common.button.group  class="justify-end">
@@ -254,27 +254,9 @@
                                                 </x-form.input>
                                                 <x-form.input>
                                                     <x-slot name="label">
-                                                        Color
-                                                    </x-slot>
-                                                    {{ $item->color }}
-                                                </x-form.input>
-                                                <x-form.input>
-                                                    <x-slot name="label">
                                                         Weight
                                                     </x-slot>
                                                     {{ $item->weight }}
-                                                </x-form.input>
-                                                <x-form.input>
-                                                    <x-slot name="label">
-                                                        Battery size
-                                                    </x-slot>
-                                                    {{ $item->battery_size }}
-                                                </x-form.input>
-                                                <x-form.input>
-                                                    <x-slot name="label">
-                                                        Battery life
-                                                    </x-slot>
-                                                    {{ $item->battery_life }}
                                                 </x-form.input>
                                             </x-form.container>
                                         </td>

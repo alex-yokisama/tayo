@@ -17,8 +17,8 @@ class CreateProductToCountryTable extends Migration
             $table->foreignId('product_id');
             $table->foreignId('country_id');
 
-            $table->foreign('product_id')->references('id')->on('product');
-            $table->foreign('country_id')->references('id')->on('country');
+            $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
+            $table->foreign('country_id')->references('id')->on('country')->onDelete('cascade');
             $table->unique(['product_id', 'country_id']);
         });
     }

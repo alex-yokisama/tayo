@@ -11,6 +11,7 @@ class Product extends Model
     use HasFactory;
 
     protected $table = 'product';
+    protected $fillable = ['id'];
 
     public function category()
     {
@@ -25,6 +26,16 @@ class Product extends Model
     public function country()
     {
         return $this->belongsTo('App\Models\Country', 'country_id');
+    }
+
+    public function msrpCurrency()
+    {
+        return $this->belongsTo('App\Models\Currency', 'currency_msrp');
+    }
+
+    public function currentCurrency()
+    {
+        return $this->belongsTo('App\Models\Currency', 'currency_current');
     }
 
     public function targetCountries()

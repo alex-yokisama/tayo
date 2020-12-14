@@ -24,7 +24,7 @@ class CreateAttributeToProductTable extends Migration
             $table->date('value_date')->nullable();
             $table->timestamps();
 
-            $table->foreign('product_id')->references('id')->on('product');
+            $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
             $table->foreign('attribute_id')->references('id')->on('attribute');
             $table->foreign('attribute_option_id')->references('id')->on('attribute_option');
             $table->unique(['product_id', 'attribute_id', 'attribute_option_id'], 'pao_unique');

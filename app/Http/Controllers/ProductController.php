@@ -105,12 +105,25 @@ class ProductController extends BaseItemController
         return view('product.list', $listData);
     }
 
+    public function copy(Requests\CopyRequest $request) {
+        $formData = $this->getFormData($request);
+        $formData['item'] = Product::findOrFail($request->id);
+        $formData['brands'] = Brand::all();
+        $formData['countries'] = Country::all();
+        $formData['currencies'] = Currency::all();
+        $formData['categories'] = Category::listWithFullPath();
+        $formData['is_copy'] = true;
+
+        return view('product.form', $formData);
+    }
+
     public function form(Requests\GetFormRequest $request)
     {
         $formData = $this->getFormData($request);
         $formData['item'] = Product::find($request->id);
         $formData['brands'] = Brand::all();
         $formData['countries'] = Country::all();
+        $formData['currencies'] = Currency::all();
         $formData['categories'] = Category::listWithFullPath();
 
         return view('product.form', $formData);
@@ -120,6 +133,9 @@ class ProductController extends BaseItemController
     {
         $item = Product::firstOrNew(['id' => $request->id]);
         $oldPrice = $item->price_current;
+        $oldPriceCurrency = $item->currentCurrency;
+        $oldMsrp = $item->price_msrp;
+        $oldMsrpCurrency = $item->msrpCurrency;
 
         //general
         $item->name = $request->name;
@@ -131,10 +147,7 @@ class ProductController extends BaseItemController
         $item->size_length = $request->size_length;
         $item->size_width = $request->size_width;
         $item->size_height = $request->size_height;
-        $item->color = $request->color;
         $item->weight = $request->weight;
-        $item->battery_size = $request->battery_size;
-        $item->battery_life = $request->battery_life;
         $item->date_publish = $request->date_publish;
         $item->is_promote = !!$request->is_promote;
 
@@ -150,6 +163,8 @@ class ProductController extends BaseItemController
             $item->tags = null;
         }
 
+        $item->save();
+
         //images
         $item->images()->delete();
 
@@ -160,6 +175,24 @@ class ProductController extends BaseItemController
         }
 
         //relations
+        try {
+            $currency = Currency::findOrFail($request->currency_msrp);
+            $item->msrpCurrency()->associate($currency);
+        } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
+            return back()->withErrors([
+                'currency_msrp' => 'Selected currency does not exist'
+            ])->withInput();
+        }
+
+        try {
+            $currency = Currency::findOrFail($request->currency_current);
+            $item->currentCurrency()->associate($currency);
+        } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
+            return back()->withErrors([
+                'currency_current' => 'Selected currency does not exist'
+            ])->withInput();
+        }
+
         try {
             $category = Category::findOrFail($request->category);
             $item->category()->associate($category);
@@ -277,13 +310,31 @@ class ProductController extends BaseItemController
         }
 
         $item->save();
+        $item->refresh();
 
         //price_change
-        if ($oldPrice !== null && $oldPrice != $item->price_current) {
+        if (($oldPrice !== null && $oldPrice != $item->price_current) ||
+            ($oldPriceCurrency !== null && $oldPriceCurrency->id != $item->currentCurrency->id)) {
             $item->priceChanges()->save(ProductPriceChange::create([
                 'product_id' => $item->id,
+                'price_type' => 'current',
                 'price_old' => $oldPrice,
+                'currency_old_id' => $oldPriceCurrency->id,
                 'price_new' => $item->price_current,
+                'currency_new_id' => $item->currentCurrency->id,
+                'reason' => 'changed from form'
+            ]));
+        }
+
+        if (($oldMsrp !== null && $oldMsrp != $item->price_msrp) ||
+            ($oldMsrpCurrency !== null && $oldMsrpCurrency != $item->msrpCurrency)) {
+            $item->priceChanges()->save(ProductPriceChange::create([
+                'product_id' => $item->id,
+                'price_type' => 'msrp',
+                'price_old' => $oldMsrp,
+                'currency_old_id' => $oldMsrpCurrency->id,
+                'price_new' => $item->price_msrp,
+                'currency_new_id' => $item->msrpCurrency->id,
                 'reason' => 'changed from form'
             ]));
         }
@@ -296,13 +347,13 @@ class ProductController extends BaseItemController
 
     public function delete(Requests\DeleteRequest $request)
     {
-        try {
+        // try {
             Product::whereIn('id', $request->items)->delete();
-        } catch (\Illuminate\Database\QueryException $ex) {
-            return back()->withErrors([
-                'delete' => 'Unable to delete. Selected items are used in other objects.'
-            ])->withInput();
-        }
+        // } catch (\Illuminate\Database\QueryException $ex) {
+        //     return back()->withErrors([
+        //         'delete' => 'Unable to delete. Selected items are used in other objects.'
+        //     ])->withInput();
+        // }
         return redirect($request->backUrl)->with([
             'status' => 'success',
             'message' => 'deleted successfully'

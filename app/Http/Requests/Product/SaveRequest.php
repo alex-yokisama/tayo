@@ -16,6 +16,8 @@ class SaveRequest extends BaseSaveRequest
             'model_family' => 'sometimes|string|nullable|max:255',
             'price_msrp' => 'required|numeric|min:0',
             'price_current' => 'required|numeric|min:0',
+            'currency_msrp' => 'required|integer|min:1',
+            'currency_current' => 'required|integer|min:1',
             'size_length' => 'sometimes|nullable|integer|min:0',
             'size_width' => 'sometimes|nullable|integer|min:0',
             'size_height' => 'sometimes|nullable|integer|min:0',
