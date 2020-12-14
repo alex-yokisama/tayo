@@ -19,7 +19,7 @@ class BaseListRequest extends FormRequest
 
     public function allowedPerPages() : \Illuminate\Support\Collection
     {
-        return collect([2, 3, 4, 5, 20, 50, 100, 200]);
+        return collect([20, 50, 100, 200]);
     }
 
     protected function defaultPerPage() : int
@@ -58,8 +58,10 @@ class BaseListRequest extends FormRequest
 
     protected function preparePerPage()
     {
-        if (!$this->allowedPerPages()->contains($this->perPage)) {
-            $this->perPage = $this->defaultPerPage();
+        if (!$this->allowedPerPages()->contains($this->perPage) || $this->perPage === null) {
+            $this->merge([
+                'perPage' => $this->defaultPerPage()
+            ]);
         }
     }
 
