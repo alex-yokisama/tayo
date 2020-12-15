@@ -14,10 +14,10 @@ class BaseSaveRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        if ($this->id && preg_match('/^[0-9]+$/', $this->id)) {
-            $this->id = $this->id;
-        } else {
-            $this->id = null;
+        if (!$this->id || !preg_match('/^[0-9]+$/', $this->id)) {
+            $this->merge([
+                'id' => null
+            ]);
         }
     }
 }

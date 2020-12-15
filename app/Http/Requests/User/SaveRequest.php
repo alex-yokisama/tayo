@@ -11,7 +11,7 @@ class SaveRequest extends BaseSaveRequest
     public function rules()
     {
         $rules = [
-            'roles' => 'sometimes|array',
+            'roles' => 'required|array',
             'roles.*' => 'integer',
             'name' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255']

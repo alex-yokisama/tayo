@@ -11,8 +11,8 @@ class SaveRequest extends BaseSaveRequest
     {
         $rules = [
             'country' => 'required|integer',
-            'bio' => 'sometimes|string|max:1000',
-            'website' => 'sometimes|string|url|max:255',
+            'bio' => 'sometimes|nullable|string|max:1000',
+            'website' => 'sometimes|nullable|string|url|max:255',
             'name' => ['required', 'string', 'max:255']
         ];
 

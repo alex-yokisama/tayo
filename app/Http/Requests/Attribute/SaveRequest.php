@@ -36,14 +36,16 @@ class SaveRequest extends BaseSaveRequest
     {
         parent::prepareForValidation();
 
-        $this->options = collect($this->options)->map(function ($item, $index) {
-                if (is_string($index)) {
-                    return ['id' => intval(str_replace('id_', '', $index)), 'name' => $item];
-                } else {
-                    return ['id' => 0, 'name' => $item];
-                }
-            })->filter(function($item) {
-                return strlen($item['name']) > 0;
-            })->values()->unique('name')->toArray();
+        $this->merge([
+            'options' => collect($this->options)->map(function ($item, $index) {
+                    if (is_string($index)) {
+                        return ['id' => intval(str_replace('id_', '', $index)), 'name' => $item];
+                    } else {
+                        return ['id' => 0, 'name' => $item];
+                    }
+                })->filter(function($item) {
+                    return strlen($item['name']) > 0;
+                })->values()->unique('name')->toArray()
+        ]);
     }
 }

@@ -27,6 +27,8 @@ class SaveRequest extends BaseSaveRequest
     protected function prepareForValidation()
     {
         parent::prepareForValidation();
-        $this->is_retailer = (bool)$this->is_retailer;
+        $this->merge([
+            'is_retailer' => $this->is_retailer ? 1: 0
+        ]);
     }
 }

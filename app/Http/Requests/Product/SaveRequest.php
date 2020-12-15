@@ -12,7 +12,7 @@ class SaveRequest extends BaseSaveRequest
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'sku' => ['required', 'string', 'max:255'],
-            'model' => 'sometimes|string|nullable|max:255',
+            'model' => 'required|string|max:255',
             'model_family' => 'sometimes|string|nullable|max:255',
             'price_msrp' => 'required|numeric|min:0',
             'price_current' => 'required|numeric|min:0',
