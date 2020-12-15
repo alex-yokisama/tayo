@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Brand as Requests;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Brand;
+use App\Models\BrandContact;
 use App\Models\Country;
 
 class BrandController extends BaseItemController
@@ -64,6 +65,14 @@ class BrandController extends BaseItemController
         }
 
         $brand->save();
+
+        $brand->contacts()->delete();
+
+        if ($request->contacts) {
+            foreach ($request->contacts as $contact) {
+                $brand->contacts()->save(new BrandContact($contact));
+            }
+        }
 
         return redirect($request->backUrl)->with([
             'status' => 'success',

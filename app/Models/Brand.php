@@ -23,6 +23,11 @@ class Brand extends Model
         return $this->hasMany('App\Models\Product', 'brand_id');
     }
 
+    public function contacts()
+    {
+        return $this->hasMany('App\Models\BrandContact', 'brand_id');
+    }
+
     static public function orderByColumn($column, $order = 'ASC')
     {
         $order = strtoupper($order) == 'ASC' ? 'ASC' : 'DESC';

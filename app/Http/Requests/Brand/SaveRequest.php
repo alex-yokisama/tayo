@@ -13,6 +13,11 @@ class SaveRequest extends BaseSaveRequest
             'country' => 'required|integer',
             'bio' => 'sometimes|nullable|string|max:1000',
             'website' => 'sometimes|nullable|string|url|max:255',
+            'contacts' => 'sometimes|array',
+            'contacts.*.name' => 'required|string|max:255',
+            'contacts.*.role' => 'sometimes|nullable|string|max:255',
+            'contacts.*.email' => 'sometimes|nullable|string|email|max:255',
+            'contacts.*.phone' => 'sometimes|nullable|string|max:255',
             'name' => ['required', 'string', 'max:255']
         ];
 
