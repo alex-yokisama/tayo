@@ -13,18 +13,6 @@ class AttributeController extends BaseItemController
 {
     protected $baseUrl = '/admin/attributes';
 
-    protected function types()
-    {
-        return collect([
-            0 => 'numeric',
-            1 => 'string',
-            2 => 'boolean',
-            3 => 'datetime',
-            4 => 'single option',
-            5 => 'multiple options'
-        ]);
-    }
-
     public function list(Requests\ListRequest $request)
     {
         $items = Attribute::orderByColumn($request->sort, $request->order);
@@ -35,6 +23,10 @@ class AttributeController extends BaseItemController
 
         if ($request->type !== null) {
             $items->where('type', '=', $request->type);
+        }
+
+        if ($request->kind !== null) {
+            $items->where('kind', '=', $request->kind);
         }
 
         if ($request->measures && count($request->measures) > 0) {
@@ -52,7 +44,8 @@ class AttributeController extends BaseItemController
         $listData = $this->getListData($request);
         $listData['items'] = $items->paginate($request->perPage);
         $listData['measures'] = Measure::all();
-        $listData['types'] = $this->types();
+        $listData['types'] = Attribute::types();
+        $listData['kinds'] = Attribute::kindsList();
 
         return view('attribute.list', $listData);
     }
@@ -62,7 +55,8 @@ class AttributeController extends BaseItemController
         $formData = $this->getFormData($request);
         $formData['item'] = Attribute::find($request->id);
         $formData['measures'] = Measure::all();
-        $formData['types'] = $this->types();
+        $formData['types'] = Attribute::types();
+        $formData['kinds'] = Attribute::kindsList();
 
         return view('attribute.form', $formData);
     }
@@ -71,6 +65,7 @@ class AttributeController extends BaseItemController
     {
         $attribute = Attribute::firstOrNew(['id' => $request->id]);
         $attribute->name = $request->name;
+        $attribute->kind = $request->kind;
 
         if ($attribute->products()->count() > 0 && $attribute->type != $request->type) {
             /*

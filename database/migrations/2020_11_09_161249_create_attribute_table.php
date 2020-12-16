@@ -23,9 +23,17 @@ class CreateAttributeTable extends Migration
              * 4 – one from list options
              * 5 - many from list options
              */
+
+            /**
+             * kind:
+             * 1 - Specification
+             * 2 - Additional product info
+             */
+             
             $table->id()->autoincrement();
             $table->string('name')->unique();
             $table->unsignedTinyInteger('type')->default(1);
+            $table->unsignedTinyInteger('kind')->default(1);
             $table->foreignId('measure_id')->nullable();
             $table->timestamps();
 

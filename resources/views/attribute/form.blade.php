@@ -83,6 +83,23 @@
                     @endforeach
                 </select>
             </x-form.input>
+            <x-form.input>
+                <x-slot name="label">
+                    Kind
+                </x-slot>
+                @foreach ($kinds as $kind_id => $kind_name)
+                    <label class="block">
+                        <input type="radio" name="kind" value="{{ $kind_id }}"
+                            {{
+                                $errors->any() ?
+                                (old('kind') == $kind_id ? 'checked' : '') :
+                                (($item !== null && $item->kind == $kind_id) ? 'checked' : '')
+                            }}
+                        >
+                        {{ $kind_name }}
+                    </label>
+                @endforeach
+            </x-form.input>
             <x-form.input x-show="showOptions">
                 <x-slot name="label">
                     Options

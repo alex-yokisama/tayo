@@ -10,7 +10,38 @@ class Attribute extends Model
     use HasFactory;
 
     protected $table = 'attribute';
-    protected $fillable = ['id', 'name', 'type'];
+    protected $fillable = ['id', 'name', 'type', 'kind'];
+
+
+    public static function types()
+    {
+        return collect([
+            0 => 'numeric',
+            1 => 'string',
+            2 => 'boolean',
+            3 => 'datetime',
+            4 => 'single option',
+            5 => 'multiple options'
+        ]);
+    }
+
+    public static function kindsList()
+    {
+        return collect([
+            1 => 'Specification',
+            2 => 'Additional product info'
+        ]);
+    }
+
+    public function getKindNameAttribute()
+    {
+        $kindsList = self::kindsList();
+        if ($kindsList->keys()->contains($this->kind)) {
+            return $kindsList[$this->kind];
+        } else {
+            return null;
+        }
+    }
 
     public function measure()
     {

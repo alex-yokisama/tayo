@@ -20,6 +20,10 @@ class ListRequest extends BaseListRequest
         if ($this->type !== null) {
             $rules['type'] = 'sometimes|integer|min:0|max:5';
         }
+
+        if ($this->kind !== null) {
+            $rules['kind'] = 'sometimes|integer|min:1|max:2';
+        }
         return $rules;
     }
 
@@ -33,6 +37,10 @@ class ListRequest extends BaseListRequest
         parent::prepareForValidation();
         if ($this->type == "any") {
             $this->type = null;
+        }
+
+        if ($this->kind == "any") {
+            $this->kind = null;
         }
     }
 }

@@ -11,6 +11,7 @@ class SaveRequest extends BaseSaveRequest
     {
         $rules = [
             'type' => 'required|integer|min:0|max:5',
+            'kind' => 'required|integer|min:1|max:2',
             'name' => ['required', 'string', 'max:255'],
         ];
 

@@ -57,6 +57,15 @@
                 </select>
             </div>
             <div class="space-x-2">
+                <label>Kind</label>
+                <select class="border px-2 py-0.5" name="kind">
+                    <option value="any" {{ Request()->type == 'any' ? 'selected' : '' }}>any</option>
+                    @foreach ($kinds as $kind_id => $kind_name)
+                        <option value="{{ $kind_id }}" {{ Request()->kind === (string)$kind_id ? 'selected' : '' }}>{{ $kind_name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="space-x-2">
                 <label>Measures</label>
                 <div class="grid gap-1 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                     @foreach ($measures as $measure)
@@ -80,6 +89,7 @@
                         <x-common.sortable sort="{{ $sort }}" order="{{ $order }}" name="name" />
                     </x-common.table.th>
                     <x-common.table.th>type</x-common.table.th>
+                    <x-common.table.th>kind</x-common.table.th>
                     <x-common.table.th>measure</x-common.table.th>
                     <x-common.table.th>options</x-common.table.th>
                     <x-common.table.th></x-common.table.th>
@@ -89,6 +99,7 @@
                         <x-common.table.td><input class="selectAllCheckable" type="checkbox" name="items[]" value="{{ $item->id }}"></x-common.table.td>
                         <x-common.table.td>{{ $item->name }}</x-common.table.td>
                         <x-common.table.td>{{ $types[$item->type] }}</x-common.table.td>
+                        <x-common.table.td>{{ $item->kindName }}</x-common.table.td>
                         <x-common.table.td>{{ $item->measure ? $item->measure->name : '' }}</x-common.table.td>
                         <x-common.table.td>
                             <x-common.badge.container>
