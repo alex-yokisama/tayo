@@ -287,6 +287,72 @@
                 @livewire('product-attributes', ['productId' => ($item !== null ? $item->id : null), 'old' => old('product_attributes')])
             </x-slot>
 
+            <x-slot name="Content">
+                <div x-data='productContents(
+                    @json(
+                        $errors->any() ?
+                        old('contents') :
+                        ($item !== null ? $item->contents : [])
+                    )
+                )'>
+                    <x-common.table.table>
+                        <x-slot name="thead">
+                            <x-common.table.th>Type</x-common.table.th>
+                            <x-common.table.th>Title</x-common.table.th>
+                            <x-common.table.th>Description</x-common.table.th>
+                            <x-common.table.th>URL</x-common.table.th>
+                            <x-common.table.th></x-common.table.th>
+                        </x-slot>
+                        <template x-for="(item, index) in items" :key="item">
+                            <x-common.table.tr>
+                                <x-common.table.td class="align-top">
+                                    <x-common.input.select
+                                    name=""
+                                    x-bind:name="`contents[${index}][type_id]`"
+                                    x-model="items[index].type_id"
+                                    :required="true"
+                                    :options="($contentTypes->map(function($item, $index) {
+                                        return (object)['key' => $index, 'value' => $item];
+                                    })->toArray())"/>
+                                </x-common.table.td>
+                                <x-common.table.td class="align-top">
+                                    <x-common.input.input type="text" x-bind:name="`contents[${index}][title]`" x-model="items[index].title" />
+                                </x-common.table.td>
+                                <x-common.table.td class="align-top">
+                                    <textarea
+                                    class="block border resize-none px-2 py-0.5"
+                                    x-model="items[index].description"
+                                    x-bind:name="`contents[${index}][description]`"
+                                    cols="50"></textarea>
+                                </x-common.table.td>
+                                <x-common.table.td class="align-top">
+                                    <x-common.input.input type="text" x-bind:name="`contents[${index}][url]`" x-model="items[index].url" />
+                                </x-common.table.td>
+                                <x-common.table.td class="align-top">
+                                    <x-common.a.a href="#" class="text-red-500" x-on:click.prevent="remove(index)">remove</x-common.a.a>
+                                </x-common.table.td>
+                            </x-common.table.tr>
+                        </template>
+                    </x-common.table.table>
+                    <x-common.button.group class="my-2">
+                        <x-common.button.a href="#" x-on:click.prevent="add">Add</x-common.button.a>
+                    </x-common.button.group>
+                </div>
+                <script>
+                    function productContents(items) {
+                        return {
+                            items: items,
+                            add() {
+                                this.items.push({});
+                            },
+                            remove(index) {
+                                this.items.splice(index, 1);
+                            }
+                        }
+                    }
+                </script>
+            </x-slot>
+
             <x-slot name="Retailer links">
                 @if ($item !== null)
                     @livewire('product-links', ['links' => $item->links->map(function($item) {

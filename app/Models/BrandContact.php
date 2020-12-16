@@ -13,7 +13,8 @@ class BrandContact extends Model
     protected $fillable = ['id', 'name', 'email', 'phone', 'role'];
     public $timestamps = false;
 
-    public function brand() {
+    public function brand()
+    {
         return $this->belongsTo('App\Models\Brand', 'brand_id');
     }
 }

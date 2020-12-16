@@ -1,7 +1,13 @@
 @props(['name', 'value', 'limit'])
 
 <div x-data="textareaLimited({{ $limit }}, `{{ str_replace("`", "'", $value) }}`)">
-    <textarea {{ $attributes->merge(['class' => 'block border resize-none px-2 py-0.5']) }} x-ref="textarea" x-model="value" x-on:keyup.debounce.500ms="autoresize($refs.textarea)" name="{{ $name }}" cols="50"></textarea>
+    <textarea
+    {{ $attributes->merge(['class' => 'block border resize-none px-2 py-0.5']) }}
+    x-ref="textarea"
+    x-model="value"
+    x-on:keyup.debounce.500ms="autoresize($refs.textarea)"
+    name="{{ $name }}"
+    cols="50"></textarea>
     <span class="text-xs text-gray-600" x-text="getSymbolsLeftText()"></span>
 </div>
 

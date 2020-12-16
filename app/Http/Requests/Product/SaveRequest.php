@@ -47,6 +47,11 @@ class SaveRequest extends BaseSaveRequest
             'links.*.currency' => 'required|integer|min:1',
             'links.*.link' => 'required|string|url|max:255',
             'links.*.link' => 'sometimes|nullable|string|max:500',
+            'contents' => 'sometimes|array',
+            'contents.*.title' => 'required|string|max:255',
+            'contents.*.description' => 'sometimes|nullable|string|max:500',
+            'contents.*.url' => 'required|string|url|max:255',
+            'contents.*.type_id' => 'required|integer|min:1|max:3',
             'images' => 'sometimes|array|distinct'
         ];
 

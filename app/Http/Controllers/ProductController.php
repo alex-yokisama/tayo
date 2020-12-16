@@ -13,6 +13,7 @@ use App\Models\ProductPriceChange;
 use App\Models\Attribute;
 use App\Models\ProductLink;
 use App\Models\ProductImage;
+use App\Models\ProductContent;
 use App\Models\Currency;
 use App\Models\Agent;
 use App\Models\Website;
@@ -122,6 +123,7 @@ class ProductController extends BaseItemController
         $formData['currencies'] = Currency::all();
         $formData['categories'] = Category::listWithFullPath();
         $formData['websites'] = Website::all();
+        $formData['contentTypes'] = ProductContent::allowedTypes();
 
         return view('product.form', $formData);
     }
@@ -168,6 +170,15 @@ class ProductController extends BaseItemController
         if ($request->images) {
             foreach ($request->images as $order => $path) {
                 $item->images()->save(new ProductImage(['path' => $path, 'order' => $order]));
+            }
+        }
+
+        //contents
+        $item->contents()->delete();
+
+        if ($request->contents) {
+            foreach ($request->contents as $content) {
+                $item->contents()->save(new ProductContent($content));
             }
         }
 

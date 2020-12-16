@@ -53,6 +53,11 @@ class Product extends Model
         return $this->hasMany('App\Models\ProductLink', 'product_id');
     }
 
+    public function contents()
+    {
+        return $this->hasMany('App\Models\ProductContent', 'product_id');
+    }
+
     public function images()
     {
         return $this->hasMany('App\Models\ProductImage', 'product_id')->orderBy('order', 'ASC');
