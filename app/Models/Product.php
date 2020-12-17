@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
 
 class Product extends Model
 {
@@ -41,6 +40,11 @@ class Product extends Model
     public function targetCountries()
     {
         return $this->belongsToMany('App\Models\Country', 'product_to_country', 'product_id', 'country_id');
+    }
+
+    public function similarProducts()
+    {
+        return $this->belongsToMany('App\Models\Product', 'similar_products', 'product_id', 'similar_id');
     }
 
     public function websites()
@@ -131,6 +135,6 @@ class Product extends Model
 
     public function getCreatedAtAttribute($date)
     {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d');
+        return (new \DateTime($date))->format("Y-m-d");
     }
 }

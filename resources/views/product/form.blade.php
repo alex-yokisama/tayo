@@ -265,6 +265,15 @@
                     </x-form.input>
                     <x-form.input>
                         <x-slot name="label">
+                            Similar products
+                        </x-slot>
+                        @livewire('similar-products-autocomplete', [
+                            'name' => 'similar[]',
+                            'ownId' => ($item !== null && !$is_copy ? $item->id : 0), 
+                            'items' => ($errors->any() ? old('similar') : ($item !== null ? $item->similarProducts : []))])
+                    </x-form.input>
+                    <x-form.input>
+                        <x-slot name="label">
                             Websites
                         </x-slot>
                         @foreach ($websites as $website)

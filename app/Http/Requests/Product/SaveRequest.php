@@ -36,6 +36,8 @@ class SaveRequest extends BaseSaveRequest
             'country' => 'required|integer|min:1',
             'countries' => 'sometimes|nullable|array|distinct',
             'countries.*' => 'integer|min:1',
+            'similar' => 'sometimes|nullable|array|distinct',
+            'similar.*' => 'integer|min:1',
             'websites' => 'sometimes|nullable|array|distinct',
             'websites.*' => 'integer|min:1',
             'product_attributes' => 'sometimes|nullable|array',

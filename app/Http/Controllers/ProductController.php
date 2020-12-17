@@ -22,18 +22,6 @@ class ProductController extends BaseItemController
 {
     protected $baseUrl = '/admin/products';
 
-    protected function types()
-    {
-        return collect([
-            0 => 'numeric',
-            1 => 'string',
-            2 => 'boolean',
-            3 => 'datetime',
-            4 => 'single option',
-            5 => 'multiple options'
-        ]);
-    }
-
     public function list(Requests\ListRequest $request)
     {
         $items = Product::orderByColumn($request->sort, $request->order)->with(['category', 'brand', 'country']);
@@ -230,21 +218,32 @@ class ProductController extends BaseItemController
 
         $item->targetCountries()->detach();
         if ($request->countries) {
-            foreach ($request->countries as $countryId) {
-                $country = Country::find($countryId);
-                if ($country) {
-                    $item->targetCountries()->attach($country);
-                }
+            $countries = Country::whereIn('id', $request->countries)->get();
+            foreach ($countries as $country) {
+                $item->targetCountries()->attach($country);
+            }
+        }
+
+        $item->similarProducts()->detach();
+        if ($item->id) {
+            \Illuminate\Support\Facades\DB::table('similar_products')
+                ->where('similar_id', $item->id)
+                ->orWhere('product_id', $item->id)
+                ->delete();
+        }
+        if ($request->similar) {
+            $similar = Product::whereIn('id', $request->similar)->get();
+            foreach ($similar as $product) {
+                $item->similarProducts()->attach($product);
+                $product->similarProducts()->attach($item);
             }
         }
 
         $item->websites()->detach();
         if ($request->websites) {
-            foreach ($request->websites as $websiteId) {
-                $website = Website::find($websiteId);
-                if ($website) {
-                    $item->websites()->attach($website);
-                }
+            $websites = Website::whereIn('id', $request->websites)->get();
+            foreach ($websites as $website) {
+                $item->websites()->attach($website);
             }
         }
 
