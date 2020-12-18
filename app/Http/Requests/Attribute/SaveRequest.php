@@ -10,6 +10,8 @@ class SaveRequest extends BaseSaveRequest
     public function rules()
     {
         $rules = [
+            'sort_order' => 'sometimes|nullable|integer',
+            'group' => 'required|integer|min:1',
             'type' => 'required|integer|min:0|max:5',
             'kind' => 'required|integer|min:1|max:2',
             'name' => ['required', 'string', 'max:255'],

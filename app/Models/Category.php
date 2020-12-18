@@ -27,6 +27,11 @@ class Category extends Model
         return $this->belongsToMany('App\Models\Attribute', 'attribute_to_category', 'category_id', 'attribute_id');
     }
 
+    public function featuredAttributes()
+    {
+        return $this->belongsToMany('App\Models\Attribute', 'attribute_to_category', 'category_id', 'attribute_id')->where('featured', 1);
+    }
+
     public function products()
     {
         return $this->hasMany('App\Models\Product', 'category_id');

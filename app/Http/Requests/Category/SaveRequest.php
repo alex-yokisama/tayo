@@ -13,6 +13,8 @@ class SaveRequest extends BaseSaveRequest
             'parent' => 'sometimes|nullable|integer',
             'attribute_ids' => 'sometimes|array|distinct',
             'attribute_ids.*' => 'integer',
+            'featured_attributes' => 'sometimes|array|distinct|max:6',
+            'featured_attributes.*' => 'integer',
             'name' => ['required', 'string', 'max:255'],
         ];
 

@@ -10,7 +10,7 @@ class Attribute extends Model
     use HasFactory;
 
     protected $table = 'attribute';
-    protected $fillable = ['id', 'name', 'type', 'kind'];
+    protected $fillable = ['id', 'name', 'type', 'kind', 'sort_order'];
 
 
     public static function types()
@@ -46,6 +46,11 @@ class Attribute extends Model
     public function measure()
     {
         return $this->belongsTo('App\Models\Measure', 'measure_id');
+    }
+
+    public function group()
+    {
+        return $this->belongsTo('App\Models\AttributeGroup', 'attribute_group_id');
     }
 
     public function categories()
@@ -126,6 +131,6 @@ class Attribute extends Model
 
     static protected function ownSortableColumns()
     {
-        return collect(['id', 'name', 'type']);
+        return collect(['id', 'name', 'type', 'kind', 'sort_order']);
     }
 }

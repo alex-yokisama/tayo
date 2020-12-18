@@ -11,6 +11,7 @@ class ListRequest extends BaseListRequest
     {
         $rules = [
             'name' => 'sometimes|max:255',
+            'group_name' => 'sometimes|max:255',
             'option' => 'sometimes|max:255',
             'page' => 'sometimes|integer',
             'perPage' => 'sometimes|integer',
@@ -29,7 +30,7 @@ class ListRequest extends BaseListRequest
 
     protected function allowedSorts() : \Illuminate\Support\Collection
     {
-        return collect(['id', 'name', 'type', 'measure']);
+        return collect(['id', 'name', 'type', 'measure', 'sort_order']);
     }
 
     protected function prepareForValidation()

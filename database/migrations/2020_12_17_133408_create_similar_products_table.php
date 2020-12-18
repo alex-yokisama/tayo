@@ -30,6 +30,6 @@ class CreateSimilarProductsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('simiar_product');
+        Schema::dropIfExists('simliar_products');
     }
 }
