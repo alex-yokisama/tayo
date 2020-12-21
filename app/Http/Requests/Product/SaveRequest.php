@@ -41,7 +41,6 @@ class SaveRequest extends BaseSaveRequest
             'websites' => 'sometimes|nullable|array|distinct',
             'websites.*' => 'integer|min:1',
             'product_attributes' => 'sometimes|nullable|array',
-            'product_attributes.*' => 'required',
             'links' => 'sometimes|array',
             'links.*.agent' => 'required|integer|min:1',
             'links.*.price_old' => 'integer|min:0',

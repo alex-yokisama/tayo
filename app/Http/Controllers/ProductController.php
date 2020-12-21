@@ -252,7 +252,7 @@ class ProductController extends BaseItemController
         if (is_array($request->product_attributes)) {
             foreach ($request->product_attributes as $id => $value) {
                 $attribute = Attribute::find($id);
-                if (!$attribute) {
+                if (!$attribute || $value === null) {
                     continue;
                 }
                 if ($attribute->type == 0) {
@@ -283,6 +283,9 @@ class ProductController extends BaseItemController
                     $data = ['value_date' => $value];
                     $item->attributes()->attach([$id => $data]);
                 } elseif ($attribute->type == 4) {
+                    if (!is_numeric($value)) {
+                        continue;
+                    }
                     $option = $attribute->options()->where('id', $value)->first();
                     if (!$option) {
                         return back()->withErrors([
