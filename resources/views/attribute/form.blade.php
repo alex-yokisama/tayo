@@ -100,6 +100,26 @@
                     </label>
                 @endforeach
             </x-form.input>
+            <x-form.input>
+                <x-slot name="label">
+                    Group
+                </x-slot>
+                <x-common.input.select
+                    name="group"
+                    :required="true"
+                    selected="{{ $errors->any() ? old('group') : ($item !== null && $item->group !== null ? $item->group->id : '') }}"
+                    :options="($groups->map(function($item) {
+                        return (object)['key' => $item->id, 'value' => $item->name];
+                    })->toArray())"
+                />
+            </x-form.input>
+            <x-form.input>
+                <x-slot name="label">
+                    Sort order
+                </x-slot>
+                <x-common.input.input type="number" name="sort_order"
+                value="{{ $errors->any() ? (old('sort_order')) : (($item != null) ? ($item->sort_order) : 0) }}" />
+            </x-form.input>
             <x-form.input x-show="showOptions">
                 <x-slot name="label">
                     Options
