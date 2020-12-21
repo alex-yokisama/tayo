@@ -269,11 +269,7 @@
                         </x-slot>
                         @livewire('similar-products-autocomplete', [
                             'name' => 'similar[]',
-<<<<<<< HEAD
                             'ownId' => ($item !== null && !$is_copy ? $item->id : 0),
-=======
-                            'ownId' => ($item !== null && !$is_copy ? $item->id : 0), 
->>>>>>> PDB-44
                             'items' => ($errors->any() ? old('similar') : ($item !== null ? $item->similarProducts : []))])
                     </x-form.input>
                     <x-form.input>
