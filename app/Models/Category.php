@@ -49,7 +49,7 @@ class Category extends Model
 
     static protected function orderByRelation($column, $order)
     {
-        return self::select('brand.*');
+        return self::select('category.*');
     }
 
     static protected function ownSortableColumns()
