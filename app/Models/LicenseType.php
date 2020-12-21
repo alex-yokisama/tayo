@@ -10,5 +10,5 @@ class LicenseType extends Model
     use HasFactory;
 
     protected $table = 'license_type';
-    protected $fillable = ['id', 'name', 'is_open_source'];
+    protected $fillable = ['id', 'name'];
 }

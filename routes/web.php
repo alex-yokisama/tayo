@@ -40,6 +40,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'can:use admin panel'])-
         ['name' => 'category', 'plural' => 'categories', 'controller' => Controllers\CategoryController::class],
         ['name' => 'product', 'plural' => 'products', 'controller' => Controllers\ProductController::class],
         ['name' => 'website', 'plural' => 'websites', 'controller' => Controllers\WebsiteController::class],
+        ['name' => 'license', 'plural' => 'licenses', 'controller' => Controllers\LicenseController::class],
     ])->map(function ($item) {
         return (object)$item;
     });
