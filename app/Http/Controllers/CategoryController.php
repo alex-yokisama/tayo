@@ -47,18 +47,19 @@ class CategoryController extends BaseItemController
         }
 
         $item->attributes()->detach();
-        if ($parent) {
-            foreach ($parent->attributes as $attribute) {
-                $item->attributes()->attach($attribute);
-            }
-        }
 
         if ($request->attribute_ids && count($request->attribute_ids) > 0) {
-            foreach ($request->attribute_ids as $attribute_id) {
-                $attribute = Attribute::find($attribute_id);
-                if ($attribute ) {
-                    $item->attributes()->attach($attribute);
-                }
+            if ($request->featured_attributes && count($request->featured_attributes) > 0) {
+                $featured = collect($request->featured_attributes);
+            } else {
+                $featured = collect([]);
+            }
+            $attributes = Attribute::whereIn('id', $request->attribute_ids)->get();
+            // dd($attributes);
+            foreach ($attributes as $attribute) {
+                $item->attributes()->attach(
+                    $attribute,
+                    ['featured' => $featured->contains($attribute->id)]);
             }
         }
 

@@ -29,14 +29,17 @@ class CreateAttributeTable extends Migration
              * 1 - Specification
              * 2 - Additional product info
              */
-             
+
             $table->id()->autoincrement();
             $table->string('name')->unique();
             $table->unsignedTinyInteger('type')->default(1);
             $table->unsignedTinyInteger('kind')->default(1);
             $table->foreignId('measure_id')->nullable();
+            $table->foreignId('attribute_group_id');
+            $table->integer('sort_order')->default(0);
             $table->timestamps();
 
+            $table->foreign('attribute_group_id')->references('id')->on('attribute_group');
             $table->foreign('measure_id')->references('id')->on('measure');
         });
     }

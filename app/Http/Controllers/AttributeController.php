@@ -7,6 +7,7 @@ use App\Http\Requests\Attribute as Requests;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Attribute;
 use App\Models\AttributeOption;
+use App\Models\AttributeGroup;
 use App\Models\Measure;
 
 class AttributeController extends BaseItemController
@@ -41,6 +42,12 @@ class AttributeController extends BaseItemController
             });
         }
 
+        if ($request->group_name) {
+            $items->whereHas('group', function($q) use ($request) {
+                $q->where('name', 'LIKE', "%$request->group_name%");
+            });
+        }
+
         $listData = $this->getListData($request);
         $listData['items'] = $items->paginate($request->perPage);
         $listData['measures'] = Measure::all();
@@ -57,17 +64,28 @@ class AttributeController extends BaseItemController
         $formData['measures'] = Measure::all();
         $formData['types'] = Attribute::types();
         $formData['kinds'] = Attribute::kindsList();
+        $formData['groups'] = AttributeGroup::orderBy('sort_order')->get();
 
         return view('attribute.form', $formData);
     }
 
     public function save(Requests\SaveRequest $request)
     {
-        $attribute = Attribute::firstOrNew(['id' => $request->id]);
-        $attribute->name = $request->name;
-        $attribute->kind = $request->kind;
+        $item = Attribute::firstOrNew(['id' => $request->id]);
+        $item->name = $request->name;
+        $item->sort_order = $request->sort_order;
+        $item->kind = $request->kind;
 
-        if ($attribute->products()->count() > 0 && $attribute->type != $request->type) {
+        try {
+            $group = AttributeGroup::findOrFail($request->group);
+            $item->group()->associate($group);
+        } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
+            return back()->withErrors([
+                'group' => 'Selected attribute group does not exist'
+            ])->withInput();
+        }
+
+        if ($item->products()->count() > 0 && $item->type != $request->type) {
             /*
              * If attribute is used by at least one product
              * type change is not allowed
@@ -76,21 +94,21 @@ class AttributeController extends BaseItemController
                  'update_type' => "Can't change type. This attribute is already used by some products."
              ])->withInput();
         } else {
-            $attribute->type = $request->type;
+            $item->type = $request->type;
         }
 
         $measure = Measure::find($request->measure);
-        $attribute->measure()->associate($measure);
+        $item->measure()->associate($measure);
 
-        $attribute->save();
+        $item->save();
 
-        if ($attribute->type == 4 || $attribute->type == 5) {
+        if ($item->type == 4 || $item->type == 5) {
             /*
              * Getting ids of options, that exist for this attribute
              * but are not present in the request data. They are
              * candidates for deletion
              */
-            $option_ids = $attribute->options->map(function($item) {
+            $option_ids = $item->options->map(function($item) {
                 return $item->id;
             });
 
@@ -111,11 +129,11 @@ class AttributeController extends BaseItemController
             foreach ($request->options as $option) {
                 $attributeOption = AttributeOption::firstOrNew(['id' => $option['id']]);
                 $attributeOption->name = $option['name'];
-                $attribute->options()->save($attributeOption);
+                $item->options()->save($attributeOption);
             }
         }
 
-        $attribute->save();
+        $item->save();
 
         return redirect($request->backUrl)->with([
             'status' => 'success',

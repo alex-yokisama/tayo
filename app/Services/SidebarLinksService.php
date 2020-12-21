@@ -8,6 +8,7 @@ class SidebarLinksService
     {
         return collect([
             ['path' => '/admin/agents', 'name' => 'Agents'],
+            ['path' => '/admin/attribute_groups', 'name' => 'Attribute groups'],
             ['path' => '/admin/attributes', 'name' => 'Attributes'],
             ['path' => '/admin/brands', 'name' => 'Brands'],
             ['path' => '/admin/categories', 'name' => 'Categories'],

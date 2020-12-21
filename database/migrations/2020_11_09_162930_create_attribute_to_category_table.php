@@ -16,6 +16,7 @@ class CreateAttributeToCategoryTable extends Migration
         Schema::create('attribute_to_category', function (Blueprint $table) {
             $table->foreignId('attribute_id');
             $table->foreignId('category_id');
+            $table->boolean('featured')->default(0);
 
             $table->foreign('attribute_id')->references('id')->on('attribute')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('category')->onDelete('cascade');

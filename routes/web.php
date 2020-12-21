@@ -35,6 +35,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'can:use admin panel'])-
         ['name' => 'measure', 'plural' => 'measures', 'controller' => Controllers\MeasureController::class],
         ['name' => 'agent', 'plural' => 'agents', 'controller' => Controllers\AgentController::class],
         ['name' => 'currency', 'plural' => 'currencies', 'controller' => Controllers\CurrencyController::class],
+        ['name' => 'attribute_group', 'plural' => 'attribute_groups', 'controller' => Controllers\AttributeGroupController::class],
         ['name' => 'attribute', 'plural' => 'attributes', 'controller' => Controllers\AttributeController::class],
         ['name' => 'category', 'plural' => 'categories', 'controller' => Controllers\CategoryController::class],
         ['name' => 'product', 'plural' => 'products', 'controller' => Controllers\ProductController::class],

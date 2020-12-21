@@ -94,8 +94,13 @@
                                         $parent :
                                         ($item->parent !== null ? $item->parent->id : null))),
                     'ownAttributes' => ($errors->any() ?
-                                        (old('attribute_ids')) :
+                                        (old('attribute_ids') !== null ? old('attribute_ids') : []) :
                                         ($item !== null ? $item->attributes->map(function($item) {
+                                            return $item->id;
+                                        })->toArray() : [])),
+                    'featuredAttributes' => ($errors->any() ?
+                                        (old('featured_attributes') !== null ? old('featured_attributes') : []) :
+                                        ($item !== null ? $item->featuredAttributes->map(function($item) {
                                             return $item->id;
                                         })->toArray() : []))
                 ])

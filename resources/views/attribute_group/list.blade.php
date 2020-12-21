@@ -1,7 +1,7 @@
 <x-custom-layout>
 
     <x-slot name="title">
-        Attributes
+        Attribute groups
     </x-slot>
 
     <x-slot name="sidebarLinks">
@@ -10,7 +10,7 @@
 
     <x-slot name="top">
         <div class="flex flex-row items-center justify-between">
-            <x-common.h.h1>Attributes</x-common.h.h1>
+            <x-common.h.h1>Attribute groups</x-common.h.h1>
             <x-common.button.group>
                 <x-common.a.a x-data="deleteItemsButton()" @click.prevent="$dispatch('show-delete-items-modal');" class="text-red-500" href="#">Delete</x-common.a.a>
                 <script>
@@ -20,7 +20,7 @@
                         }
                     }
                 </script>
-                <x-common.button.a href="/admin/attribute?backUrl={{ urlencode($backUrl) }}">New</x-common.button.a>
+                <x-common.button.a href="/admin/attribute_group?backUrl={{ urlencode($backUrl) }}">New</x-common.button.a>
             </x-common.button.group>
         </div>
 
@@ -47,43 +47,10 @@
                 <label>Name</label>
                 <input type="text" name="name" value="{{ Request()->name }}" class="border px-2 py-0.5">
             </div>
-            <div class="space-x-2">
-                <label>Group</label>
-                <input type="text" name="group_name" value="{{ Request()->group_name }}" class="border px-2 py-0.5">
-            </div>
-            <div class="space-x-2">
-                <label>Type</label>
-                <select class="border px-2 py-0.5" name="type">
-                    <option value="any" {{ Request()->type == 'any' ? 'selected' : '' }}>any</option>
-                    @foreach ($types as $type_id => $type_name)
-                        <option value="{{ $type_id }}" {{ Request()->type === (string)$type_id ? 'selected' : '' }}>{{ $type_name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="space-x-2">
-                <label>Kind</label>
-                <select class="border px-2 py-0.5" name="kind">
-                    <option value="any" {{ Request()->type == 'any' ? 'selected' : '' }}>any</option>
-                    @foreach ($kinds as $kind_id => $kind_name)
-                        <option value="{{ $kind_id }}" {{ Request()->kind === (string)$kind_id ? 'selected' : '' }}>{{ $kind_name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="space-x-2">
-                <label>Measures</label>
-                <div class="grid gap-1 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                    @foreach ($measures as $measure)
-                        <label>
-                            <input type="checkbox" {{ collect(Request()->measures)->contains($measure->id) ? 'checked' : '' }} name="measures[]" value="{{ $measure->id }}">
-                            {{ $measure->name }}
-                        </label>
-                    @endforeach
-                </div>
-            </div>
         </x-slot>
 
         {{ $items->withQueryString()->links('vendor.pagination.custom-tailwind', ['allowedPerPages' => $allowedPerPages]) }}
-        <form class="deleteItemsForm" action="delete_attributes" method="post">
+        <form class="deleteItemsForm" action="delete_attribute_groups" method="post">
             @csrf
             <input type="hidden" name="backUrl" value="{{ $backUrl }}">
             <x-common.table.table x-data="tableComponent()">
@@ -92,11 +59,6 @@
                     <x-common.table.th>
                         <x-common.sortable sort="{{ $sort }}" order="{{ $order }}" name="name" />
                     </x-common.table.th>
-                    <x-common.table.th>type</x-common.table.th>
-                    <x-common.table.th>kind</x-common.table.th>
-                    <x-common.table.th>group</x-common.table.th>
-                    <x-common.table.th>measure</x-common.table.th>
-                    <x-common.table.th>options</x-common.table.th>
                     <x-common.table.th>
                         <x-common.sortable sort="{{ $sort }}" order="{{ $order }}" name="sort_order">Sort order</x-common.sortable>
                     </x-common.table.th>
@@ -106,21 +68,10 @@
                     <x-common.table.tr>
                         <x-common.table.td><input class="selectAllCheckable" type="checkbox" name="items[]" value="{{ $item->id }}"></x-common.table.td>
                         <x-common.table.td>{{ $item->name }}</x-common.table.td>
-                        <x-common.table.td>{{ $types[$item->type] }}</x-common.table.td>
-                        <x-common.table.td>{{ $item->kindName }}</x-common.table.td>
-                        <x-common.table.td>{{ $item->group->name }}</x-common.table.td>
-                        <x-common.table.td>{{ $item->measure ? $item->measure->name : '' }}</x-common.table.td>
-                        <x-common.table.td>
-                            <x-common.badge.container>
-                                @foreach ($item->options as $option)
-                                    <x-common.badge.badge class="bg-gray-500 text-white">{{ $option->name }}</x-common.badge.badge>
-                                @endforeach
-                            </x-common.badge.container>
-                        </x-common.table.td>
                         <x-common.table.td>{{ $item->sort_order }}</x-common.table.td>
                         <x-common.table.td>
                             <x-common.button.group  class="justify-end">
-                                <x-common.button.a href="/admin/attribute?id={{ $item->id }}&backUrl={{ urlencode($backUrl) }}">
+                                <x-common.button.a href="/admin/attribute_group?id={{ $item->id }}&backUrl={{ urlencode($backUrl) }}">
                                     Edit
                                 </x-common.button.a>
                             </x-common.button.group>
@@ -167,7 +118,6 @@
             </script>
         </form>
         {{ $items->withQueryString()->links('vendor.pagination.custom-tailwind', ['allowedPerPages' => $allowedPerPages]) }}
-
     </x-list>
 
     @push('modals')
