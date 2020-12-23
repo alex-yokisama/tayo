@@ -33,7 +33,7 @@ class OS extends Model
         return $this->belongsTo('App\Models\Brand', 'brand_id');
     }
 
-    public function brand()
+    public function licenseType()
     {
         return $this->belongsTo('App\Models\LicenseType', 'license_type_id');
     }
@@ -46,6 +46,11 @@ class OS extends Model
     public function releases()
     {
         return $this->hasMany('App\Models\OSRelease', 'os_id');
+    }
+
+    public function getVersionAttribute()
+    {
+        return $this->releases()->orderBy('release_date', 'DESC')->first()->version;
     }
 
     public function getImageUrlAttribute()
@@ -73,7 +78,7 @@ class OS extends Model
 
     static protected function orderByRelation($column, $order)
     {
-        if ($column == 'license_type') {
+        if ($column == 'license') {
             return self::select('os.*')
                         ->join('license_type', 'license_type.id', '=', 'os.license_type_id')
                         ->orderBy('license_type.name', $order);

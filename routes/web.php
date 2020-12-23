@@ -41,6 +41,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'can:use admin panel'])-
         ['name' => 'product', 'plural' => 'products', 'controller' => Controllers\ProductController::class],
         ['name' => 'website', 'plural' => 'websites', 'controller' => Controllers\WebsiteController::class],
         ['name' => 'license', 'plural' => 'licenses', 'controller' => Controllers\LicenseController::class],
+        ['name' => 'os', 'plural' => 'oss', 'controller' => Controllers\OSController::class],
     ])->map(function ($item) {
         return (object)$item;
     });
