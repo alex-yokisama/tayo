@@ -25,6 +25,6 @@ class ListRequest extends BaseListRequest
 
     protected function allowedSorts() : \Illuminate\Support\Collection
     {
-        return collect(['id', 'name', 'license', 'brand', 'version']);
+        return collect(['id', 'name', 'license', 'brand']);
     }
 }

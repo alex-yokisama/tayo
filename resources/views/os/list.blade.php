@@ -108,9 +108,7 @@
                         <x-common.table.th>
                             <x-common.sortable sort="{{ $sort }}" order="{{ $order }}" name="license" />
                         </x-common.table.th>
-                        <x-common.table.th>
-                            <x-common.sortable sort="{{ $sort }}" order="{{ $order }}" name="version" />
-                        </x-common.table.th>
+                        <x-common.table.th>version</x-common.table.th>
                         <x-common.table.th>Is&nbsp;kernel</x-common.table.th>
                         <x-common.table.th></x-common.table.th>
                     </x-slot>
@@ -165,8 +163,8 @@
                                     Change log
                                 </x-common.h.h4>
                                 <div class="p-2 mb-2">
-                                    <a href="{{ $itetm->change_log_url }}" target="_blank">
-                                        {{ $itetm->change_log_url }}
+                                    <a href="{{ $item->change_log_url }}" target="_blank">
+                                        {{ $item->change_log_url }}
                                     </a>
                                 </div>
                             </x-common.table.td>

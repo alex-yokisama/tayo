@@ -10,5 +10,5 @@ class OSRelease extends Model
     use HasFactory;
 
     protected $table = 'os_release';
-    protected $fillable = ['id', 'name', 'version', 'added_features', 'release_date'];
+    protected $fillable = ['id', 'version', 'added_features', 'release_date'];
 }

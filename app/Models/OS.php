@@ -23,7 +23,7 @@ class OS extends Model
         return $this->belongsTo('App\Models\OS', 'parent_id');
     }
 
-    public function parentOSRelese()
+    public function parentOSRelease()
     {
         return $this->belongsTo('App\Models\OSRelease', 'parent_os_release_id');
     }
@@ -45,12 +45,16 @@ class OS extends Model
 
     public function releases()
     {
-        return $this->hasMany('App\Models\OSRelease', 'os_id');
+        return $this->hasMany('App\Models\OSRelease', 'os_id')->orderBy('release_date', 'ASC');
     }
 
     public function getVersionAttribute()
     {
-        return $this->releases()->orderBy('release_date', 'DESC')->first()->version;
+        $lastRelease = $this->releases->last();
+        if ($lastRelease) {
+            return $lastRelease->version;
+        }
+        return null;
     }
 
     public function getImageUrlAttribute()
@@ -82,12 +86,6 @@ class OS extends Model
             return self::select('os.*')
                         ->join('license_type', 'license_type.id', '=', 'os.license_type_id')
                         ->orderBy('license_type.name', $order);
-        } elseif ($column == 'version') {
-            return self::select('os.*')
-                        ->join(
-                            OSRelease::select('MAX(id) as id, version')->groupBy('os_id'),
-                            'os_release.id', '=', 'os.parent_os_release_id')
-                        ->orderBy('os_release.version', $order);
         } elseif ($column == 'brand') {
             return self::select('os.*')
                         ->join('brand', 'brand.id', '=', 'os.brand_id')

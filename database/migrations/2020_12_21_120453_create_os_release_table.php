@@ -16,13 +16,12 @@ class CreateOsReleaseTable extends Migration
         Schema::create('os_release', function (Blueprint $table) {
             $table->id()->autoincrement();
             $table->foreignId('os_id')->nullable();
-            $table->string('name');
             $table->string('version');
             $table->date('release_date');
             $table->string('added_features', 1000)->nullable();
             $table->timestamps();
 
-            $table->foreign('os_id')->references('id')->on('os');
+            $table->foreign('os_id')->references('id')->on('os')->onDelete('cascade');
         });
 
         Schema::table('os', function (Blueprint $table) {

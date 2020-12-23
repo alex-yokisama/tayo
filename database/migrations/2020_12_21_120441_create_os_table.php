@@ -20,7 +20,7 @@ class CreateOsTable extends Migration
             $table->foreignId('parent_id')->nullable();
             $table->foreignId('parent_os_release_id')->nullable();
             $table->string('name');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->string('change_log_url');
             $table->boolean('is_kernel')->default(false);
             $table->string('description', 1000)->nullable();
