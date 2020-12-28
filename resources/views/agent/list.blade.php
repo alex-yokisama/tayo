@@ -89,7 +89,7 @@
                 @foreach ($items as $item)
                     <x-common.table.tr>
                         <x-common.table.td><input class="selectAllCheckable" type="checkbox" name="items[]" value="{{ $item->id }}"></x-common.table.td>
-                        <x-common.table.td>{{ $item->name }}</x-common.table.td>
+                        <x-common.table.td>{{ $item->name }} {{ $item->surname }}</x-common.table.td>
                         <x-common.table.td>
                             @if ($item->image != null)
                                 <div class="w-16 h-16 bg-contain bg-no-repeat bg-center" style="background-image: url('{{ $item->imageUrl }}');"></div>

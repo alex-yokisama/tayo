@@ -16,7 +16,8 @@ class AgentController extends BaseItemController
         $items = Agent::orderBy($request->sort, $request->order);
 
         if ($request->name) {
-            $items->where('name', 'LIKE', "%$request->name%");
+            $items->where('name', 'LIKE', "%$request->name%")
+                  ->orWhere('surname', 'LIKE', "%$request->name%");
         }
 
         if ($request->website) {
@@ -51,6 +52,7 @@ class AgentController extends BaseItemController
     {
         $item = Agent::firstOrNew(['id' => $request->id]);
         $item->name = $request->name;
+        $item->surname = $request->surname;
         $item->website = $request->website;
         $item->is_retailer = $request->is_retailer;
         $item->type_id = (int)$request->type;

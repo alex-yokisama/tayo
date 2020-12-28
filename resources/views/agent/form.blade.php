@@ -48,6 +48,13 @@
             </x-form.input>
             <x-form.input>
                 <x-slot name="label">
+                    Surname
+                </x-slot>
+                <x-common.input.input type="text" name="surname"
+                value="{{ (old('surname') !== null) ? (old('surname')) : (($item != null) ? ($item->surname) : '')}}" />
+            </x-form.input>
+            <x-form.input>
+                <x-slot name="label">
                     Website
                 </x-slot>
                 <x-common.input.input type="text" name="website"

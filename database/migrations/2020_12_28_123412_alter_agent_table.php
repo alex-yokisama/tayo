@@ -13,15 +13,22 @@ class AlterAgentTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('agent') && !Schema::hasColumn('agent', 'type_id')) {
-            Schema::table('agent', function (Blueprint $table) {
-                /*
-                 * Types:
-                 * 0 - legal entity
-                 * 1 - individual
-                 */
-                $table->unsignedTinyInteger('type_id')->default(0);
-            });
+        if (Schema::hasTable('agent')) {
+            if (!Schema::hasColumn('agent', 'type_id')) {
+                Schema::table('agent', function (Blueprint $table) {
+                    /*
+                     * Types:
+                     * 0 - legal entity
+                     * 1 - individual
+                     */
+                    $table->unsignedTinyInteger('type_id')->default(0);
+                });
+            }
+            if (!Schema::hasColumn('agent', 'surname')) {
+                Schema::table('agent', function (Blueprint $table) {
+                    $table->string('surname')->nullable();
+                });
+            }
         }
     }
 
@@ -32,10 +39,17 @@ class AlterAgentTable extends Migration
      */
     public function down()
     {
-        if (Schema::hasTable('agent') && Schema::hasColumn('agent', 'type_id')) {
-            Schema::table('agent', function (Blueprint $table) {
-                $table->dropColumn('type_id');
-            });
+        if (Schema::hasTable('agent')) {
+            if (Schema::hasColumn('agent', 'type_id')) {
+                Schema::table('agent', function (Blueprint $table) {
+                    $table->dropColumn('type_id');
+                });
+            }
+            if (Schema::hasColumn('agent', 'surname')) {
+                Schema::table('agent', function (Blueprint $table) {
+                    $table->dropColumn('surname');
+                });
+            }
         }
     }
 }

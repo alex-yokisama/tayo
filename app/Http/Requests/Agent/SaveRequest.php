@@ -13,14 +13,9 @@ class SaveRequest extends BaseSaveRequest
             'is_retailer' => 'required|boolean',
             'website' => 'sometimes|string|nullable|url|max:255',
             'type' => 'required|integer|min:0|max:1',
-            'name' => ['required', 'string', 'max:255']
+            'surname' => 'sometimes|nullable|string|max:255',
+            'name' => 'required|string|max:255',
         ];
-
-        $rule = Rule::unique('agent');
-        if ($this->id) {
-            $rule->ignore($this->id);
-        }
-        $rules['name'][] = $rule;
 
         return $rules;
     }

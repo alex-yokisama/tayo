@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAgentTable extends Migration
+class CreateFilmToGenreTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,8 @@ class CreateAgentTable extends Migration
      */
     public function up()
     {
-        Schema::create('agent', function (Blueprint $table) {
-            $table->id()->autoincrement();
-            $table->string('name');
-            $table->string('image')->nullable();
-            $table->string('website')->nullable();
-            $table->boolean('is_retailer');
+        Schema::create('film_to_genre', function (Blueprint $table) {
+            $table->id();
             $table->timestamps();
         });
     }
@@ -30,6 +26,6 @@ class CreateAgentTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('agent');
+        Schema::dropIfExists('film_to_genre');
     }
 }

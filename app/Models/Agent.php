@@ -11,7 +11,7 @@ class Agent extends Model
     use HasFactory;
 
     protected $table = 'agent';
-    protected $fillable = ['id', 'name', 'website', 'is_retailer'];
+    protected $fillable = ['id', 'name', 'surname', 'website', 'is_retailer'];
 
     public static function types()
     {
