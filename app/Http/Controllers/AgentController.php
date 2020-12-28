@@ -27,8 +27,13 @@ class AgentController extends BaseItemController
             $items->where('is_retailer', '=', $request->is_retailer);
         }
 
+        if ($request->type !== null) {
+            $items->where('type_id', '=', $request->type);
+        }
+
         $listData = $this->getListData($request);
         $listData['items'] = $items->paginate($request->perPage);
+        $listData['types'] = Agent::types();
 
         return view('agent.list', $listData);
     }
@@ -37,18 +42,20 @@ class AgentController extends BaseItemController
     {
         $formData = $this->getFormData($request);
         $formData['item'] = Agent::find($request->id);
+        $formData['types'] = Agent::types();
 
         return view('agent.form', $formData);
     }
 
     public function save(Requests\SaveRequest $request)
     {
-        $agent = Agent::firstOrNew(['id' => $request->id]);
-        $agent->name = $request->name;
-        $agent->website = $request->website;
-        $agent->is_retailer = $request->is_retailer;
-        $agent->image = $request->image;
-        $agent->save();
+        $item = Agent::firstOrNew(['id' => $request->id]);
+        $item->name = $request->name;
+        $item->website = $request->website;
+        $item->is_retailer = $request->is_retailer;
+        $item->type_id = (int)$request->type;
+        $item->image = $request->image;
+        $item->save();
 
         return redirect($request->backUrl)->with([
             'status' => 'success',

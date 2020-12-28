@@ -54,6 +54,20 @@
                 value="{{ (old('website') !== null) ? (old('website')) : (($item != null) ? ($item->website) : '')}}" />
             </x-form.input>
             <x-form.input>
+                <x-slot name="label">
+                    Type
+                </x-slot>
+                <x-common.input.select
+                    name="type"
+                    :required="true"
+                    :default="false"
+                    selected="{{ old('type') !== null ? old('type') : ($item !== null ? $item->type->id : '') }}"
+                    :options="($types->map(function($item, $index) {
+                        return (object)['key' => $index, 'value' => $item];
+                    })->toArray())"
+                />
+            </x-form.input>
+            <x-form.input>
                 <label class="space-x-1">
                     <span>Is retailer</span>
                     <input type="checkbox" name="is_retailer" value="1"

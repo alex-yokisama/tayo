@@ -13,6 +13,14 @@ class Agent extends Model
     protected $table = 'agent';
     protected $fillable = ['id', 'name', 'website', 'is_retailer'];
 
+    public static function types()
+    {
+        return collect([
+            0 => 'legal entity',
+            1 => 'individual'
+        ]);
+    }
+
     public function links()
     {
         return $this->hasMany('App\Models\ProductLink', 'agent_id');
@@ -21,6 +29,14 @@ class Agent extends Model
     public function products()
     {
         return $this->belongsToMany('App\Models\Product', 'product_link', 'agent_id', 'product_id');
+    }
+
+    public function getTypeAttribute()
+    {
+        return (object)[
+            'id' => (int)$this->type_id,
+            'name' => self::types()[(int)$this->type_id]
+        ];
     }
 
     public function getImageUrlAttribute()

@@ -59,6 +59,15 @@
                     <option value="0" {{ Request()->is_retailer == '0' ? 'selected' : '' }}>no</option>
                 </select>
             </div>
+            <div class="space-x-2">
+                <label>Type</label>
+                <select class="border px-2 py-0.5" name="type">
+                    <option value="any" {{ Request()->type == 'any' ? 'selected' : '' }}>any</option>
+                    @foreach ($types as $type_id => $type_name)
+                        <option value="{{ $type_id }}" {{ Request()->type === (string)$type_id ? 'selected' : '' }}>{{ $type_name }}</option>
+                    @endforeach
+                </select>
+            </div>
         </x-slot>
 
         {{ $items->withQueryString()->links('vendor.pagination.custom-tailwind', ['allowedPerPages' => $allowedPerPages]) }}
@@ -73,6 +82,7 @@
                     </x-common.table.th>
                     <x-common.table.th>logo</x-common.table.th>
                     <x-common.table.th>website</x-common.table.th>
+                    <x-common.table.th>type</x-common.table.th>
                     <x-common.table.th>is retailer</x-common.table.th>
                     <x-common.table.th></x-common.table.th>
                 </x-slot>
@@ -91,6 +101,9 @@
                                     {{ $item->website }}
                                 </a>
                             @endif
+                        </x-common.table.td>
+                        <x-common.table.td>
+                            {{ $item->type->name }}
                         </x-common.table.td>
                         <x-common.table.td>
                             {{ $item->is_retailer ? '+' : '-' }}

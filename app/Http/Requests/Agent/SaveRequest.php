@@ -12,6 +12,7 @@ class SaveRequest extends BaseSaveRequest
         $rules = [
             'is_retailer' => 'required|boolean',
             'website' => 'sometimes|string|nullable|url|max:255',
+            'type' => 'required|integer|min:0|max:1',
             'name' => ['required', 'string', 'max:255']
         ];
 

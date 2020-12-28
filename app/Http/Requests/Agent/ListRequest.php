@@ -19,6 +19,11 @@ class ListRequest extends BaseListRequest
         if ($this->is_retailer !== null) {
             $rules['is_retailer'] = 'sometimes|boolean';
         }
+
+        if ($this->type !== null) {
+            $rules['type'] = 'sometimes|integer|min:0|max:1';
+        }
+
         return $rules;
     }
 
@@ -32,6 +37,10 @@ class ListRequest extends BaseListRequest
         parent::prepareForValidation();
         if ($this->is_retailer == "any") {
             $this->is_retailer = null;
+        }
+
+        if ($this->type == "any") {
+            $this->type = null;
         }
     }
 }
