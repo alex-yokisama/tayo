@@ -42,6 +42,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'can:use admin panel'])-
         ['name' => 'website', 'plural' => 'websites', 'controller' => Controllers\WebsiteController::class],
         ['name' => 'license', 'plural' => 'licenses', 'controller' => Controllers\LicenseController::class],
         ['name' => 'os', 'plural' => 'oss', 'controller' => Controllers\OSController::class],
+        ['name' => 'film_genre', 'plural' => 'film_genres', 'controller' => Controllers\FilmGenreController::class],
     ])->map(function ($item) {
         return (object)$item;
     });

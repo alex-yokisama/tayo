@@ -20,7 +20,8 @@ class SidebarLinksService
             ['path' => '/admin/users', 'name' => 'Users'],
             ['path' => '/admin/websites', 'name' => 'Websites'],
             ['path' => '/admin/licenses', 'name' => 'Licenses'],
-            ['path' => '/admin/oss', 'name' => 'OS']
+            ['path' => '/admin/oss', 'name' => 'OS'],
+            ['path' => '/admin/film_genres', 'name' => 'Film genres']
         ])->map(function($item) use ($active) {
             $item = (object)$item;
             $item->active = $item->path == $active;
