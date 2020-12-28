@@ -43,6 +43,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'can:use admin panel'])-
         ['name' => 'license', 'plural' => 'licenses', 'controller' => Controllers\LicenseController::class],
         ['name' => 'os', 'plural' => 'oss', 'controller' => Controllers\OSController::class],
         ['name' => 'film_genre', 'plural' => 'film_genres', 'controller' => Controllers\FilmGenreController::class],
+        ['name' => 'age_rating', 'plural' => 'age_ratings', 'controller' => Controllers\AgeRatingController::class],
     ])->map(function ($item) {
         return (object)$item;
     });
