@@ -14,8 +14,12 @@ class CreateFilmRecomendationTable extends Migration
     public function up()
     {
         Schema::create('film_recomendation', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->foreignId('film_parent_id');
+            $table->foreignId('film_child_id');
+
+            $table->foreign('film_parent_id')->references('id')->on('film')->onDelete('cascade');
+            $table->foreign('film_child_id')->references('id')->on('film')->onDelete('cascade');
+            $table->unique(['film_parent_id', 'film_child_id']);
         });
     }
 

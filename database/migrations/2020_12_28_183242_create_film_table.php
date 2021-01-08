@@ -14,8 +14,25 @@ class CreateFilmTable extends Migration
     public function up()
     {
         Schema::create('film', function (Blueprint $table) {
-            $table->id();
+            $table->id()->autoincrement();
+            $table->string('name');
+            $table->date('release_date');
+            $table->unsignedTinyInteger('type_id')->default(0);
+            $table->foreignId('director_id')->nullable();
+            $table->foreignId('writer_id')->nullable();
+            $table->foreignId('producer_id')->nullable();
+            $table->foreignId('production_company_id')->nullable();
+            $table->text('description')->nullable();
+            $table->foreignId('age_rating_id')->nullable();
+            $table->string('image')->nullable();
+            $table->string('trailer_link')->nullable();
             $table->timestamps();
+
+            $table->foreign('director_id')->references('id')->on('agent');
+            $table->foreign('writer_id')->references('id')->on('agent');
+            $table->foreign('producer_id')->references('id')->on('agent');
+            $table->foreign('production_company_id')->references('id')->on('agent');
+            $table->foreign('age_rating_id')->references('id')->on('age_rating');
         });
     }
 

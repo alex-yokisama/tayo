@@ -14,8 +14,12 @@ class CreateFilmReviewRecomendationTable extends Migration
     public function up()
     {
         Schema::create('film_review_recomendation', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->foreignId('film_review_id');
+            $table->foreignId('film_id');
+
+            $table->foreign('film_review_id')->references('id')->on('film_review')->onDelete('cascade');
+            $table->foreign('film_id')->references('id')->on('film')->onDelete('cascade');
+            $table->unique(['film_review_id', 'film_id']);
         });
     }
 

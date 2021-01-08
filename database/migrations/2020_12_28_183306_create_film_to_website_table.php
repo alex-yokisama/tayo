@@ -14,8 +14,13 @@ class CreateFilmToWebsiteTable extends Migration
     public function up()
     {
         Schema::create('film_to_website', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->foreignId('film_id');
+            $table->foreignId('website_id');
+            $table->string('link')->nullable();
+
+            $table->foreign('film_id')->references('id')->on('film')->onDelete('cascade');
+            $table->foreign('website_id')->references('id')->on('film_genre')->onDelete('cascade');
+            $table->unique(['film_id', 'website_id']);
         });
     }
 
