@@ -292,9 +292,15 @@
                 </x-form.container>
             </x-slot>
 
-            <x-slot name="Attributes">
-                @livewire('product-attributes', ['productId' => ($item !== null ? $item->id : null), 'old' => old('product_attributes')])
-            </x-slot>
+            @foreach ($attributeKinds as $kind_id => $kind_name)
+                <x-slot :name="$kind_name">
+                    @livewire('product-attributes', [
+                        'productId' => ($item !== null ? $item->id : null),
+                        'old' => old('product_attributes'),
+                        'kind_id' => $kind_id
+                    ], key('product_attribute_'.$kind_id))
+                </x-slot>
+            @endforeach
 
             <x-slot name="Content">
                 <div x-data='productContents(

@@ -112,6 +112,7 @@ class ProductController extends BaseItemController
         $formData['categories'] = Category::listWithFullPath();
         $formData['websites'] = Website::all();
         $formData['contentTypes'] = ProductContent::allowedTypes();
+        $formData['attributeKinds'] = Attribute::kindsList();
 
         return view('product.form', $formData);
     }
