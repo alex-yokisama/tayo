@@ -10,6 +10,10 @@
                             </x-slot>
                             Featured
                         </x-form.input>
+                    @else
+                        <x-form.input class="text-bold">
+                            There are no attributes of this kind
+                        </x-form.input>
                     @endif
                     @foreach ($kind->groups as $group)
                         <x-form.input class="bg-gray-200">

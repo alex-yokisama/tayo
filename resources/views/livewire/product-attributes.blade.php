@@ -1,5 +1,10 @@
 <div class="">
     <x-form.container>
+        @if ($this->groups->count() == 0)
+            <x-form.input>
+                Selected category has no attributes of this kind
+            </x-form.input>
+        @endif
         @foreach ($this->groups as $group)
             <x-form.input class="bg-gray-200">
                 {{ $group->name}}
@@ -40,7 +45,7 @@
                         @livewire('product-option-autocomplete', [
                             'name' => 'product_attributes['.$attribute->id.'][]',
                             'attr' => $attribute,
-                            'items' => ($old !== null && isset($old[$attribute->id]) ? $old[$attribute->id] : $val)    
+                            'items' => ($old !== null && isset($old[$attribute->id]) ? $old[$attribute->id] : $val)
                         ], key('product_attribute_'.$attribute->id))
                     @endif
                     @if ($attribute->measure !== null)
