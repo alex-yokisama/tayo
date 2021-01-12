@@ -21,7 +21,8 @@ class SaveRequest extends BaseSaveRequest
             'releases' => 'required|array|distinct|min:1',
             'releases.*.version' => 'required|string|max:255',
             'releases.*.release_date' => 'required|date',
-            'releases.*.added_features' => 'sometimes|nullable|string|max:1000',
+            'releases.*.added_features' => 'sometimes|nullable|array',
+            'releases.*.added_features.*' => 'sometimes|nullable|string|max:1000',
             'parent' => 'sometimes|nullable|integer',
         ];
 

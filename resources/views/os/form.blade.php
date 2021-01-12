@@ -121,7 +121,7 @@
                             <x-common.table.th>Added features</x-common.table.th>
                             <x-common.table.th></x-common.table.th>
                         </x-slot>
-                        <template x-for="(item, index) in items" :key="item">
+                        <template x-for="(item, index) in items" :key="index">
                             <x-common.table.tr>
                                 <x-common.table.td class="align-top">
                                     <template x-if="items[index].id">
@@ -133,10 +133,20 @@
                                     <x-common.input.input type="date" x-bind:name="`releases[${index}][release_date]`" x-model="items[index].release_date" />
                                 </x-common.table.td>
                                 <x-common.table.td class="align-top">
+                                    <ul class="list-disc ml-6">
+                                        <template x-for="(feature, f_index) in items[index].added_features" :key="f_index">
+                                            <li class="px-2 py-0.5">
+                                                <span x-text="feature"></span>
+                                                <a href="#" x-on:click.prevent="removeFeature(index, f_index)">&times;</a>
+                                                <input type="hidden" x-bind:name="`releases[${index}][added_features][]`" x-model="items[index].added_features[f_index]">
+                                            </li>
+                                        </template>
+                                    </ul>
                                     <textarea
                                     class="block border resize-none px-2 py-0.5"
-                                    x-model="items[index].added_features"
-                                    x-bind:name="`releases[${index}][added_features]`"
+                                    :x-ref="'added_features_' + index"
+                                    x-on:keydown.enter.prevent="addFeature(index, $refs)"
+                                    placeholder="Press 'Enter' to add new list item"
                                     cols="50"></textarea>
                                 </x-common.table.td>
                                 <x-common.table.td class="align-top">
@@ -150,17 +160,31 @@
                     </x-common.button.group>
                 </div>
                 <script>
-                    function osReleases(items) {
-                        return {
-                            items: items,
-                            add() {
-                                this.items.push({});
-                            },
-                            remove(index) {
-                                this.items.splice(index, 1);
+                function osReleases(items) {
+                    return {
+                        items: items,
+                        add() {
+                            this.items.push({
+                                added_features: []
+                            });
+                        },
+                        addFeature(index, $ref) {
+                            let input = $ref['added_features_' + index];
+                            if (!input) return;
+                            let val = input.value.trim();
+                            if (val.length > 0) {
+                                this.items[index].added_features.push(val);
+                                input.value = "";
                             }
+                        },
+                        removeFeature(index, featureIndex) {
+                            this.items[index].added_features.splice(featureIndex, 1);
+                        },
+                        remove(index) {
+                            this.items.splice(index, 1);
                         }
                     }
+                }
                 </script>
             </x-slot>
 
