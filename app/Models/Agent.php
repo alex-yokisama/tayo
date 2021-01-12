@@ -51,4 +51,9 @@ class Agent extends Model
 
         return Storage::disk('images')->url($this->image);
     }
+
+    public function getFullNameAttribute()
+    {
+        return $this->name.' '.$this->surname;
+    }
 }
