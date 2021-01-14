@@ -15,9 +15,9 @@ class CreateFilmReviewTable extends Migration
     {
         Schema::create('film_review', function (Blueprint $table) {
             $table->id()->autoincrement();
-            $table->foreignId('film_id');
+            $table->foreignId('film_id')->nullable();
             $table->string('title');
-            $table->string('subtitle');
+            $table->string('subtitle')->nullable();
             $table->text('summary')->nullable();
             $table->text('positive')->nullable();
             $table->text('negative')->nullable();

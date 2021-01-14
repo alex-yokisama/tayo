@@ -52,7 +52,9 @@ class WebsiteAutocompleteMultiple extends Component
             $query->orWhere('name', 'LIKE', '%'.$this->search.'%')
                   ->orWhere('url', 'LIKE', '%'.$this->search.'%');
         });
-        $query->whereNotIn('id', $this->excludeIds);
+        $query->whereNotIn('id', $this->items->map(function($item) {
+             return $item->id;
+         })->concat($this->excludeIds));
         $this->suggestions = $query->limit(10)->get();
     }
 

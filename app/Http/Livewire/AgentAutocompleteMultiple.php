@@ -54,7 +54,9 @@ class AgentAutocompleteMultiple extends Component
             $query->orWhere('name', 'LIKE', '%'.$this->search.'%')
                   ->orWhere('surname', 'LIKE', '%'.$this->search.'%');
         });
-        $query->whereNotIn('id', $this->excludeIds);
+        $query->whereNotIn('id', $this->items->map(function($item) {
+             return $item->id;
+         })->concat($this->excludeIds));
         if ($this->type !== null) {
             $query->where('type_id', $this->type);
         }

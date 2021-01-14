@@ -45,6 +45,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'can:use admin panel'])-
         ['name' => 'film_genre', 'plural' => 'film_genres', 'controller' => Controllers\FilmGenreController::class],
         ['name' => 'age_rating', 'plural' => 'age_ratings', 'controller' => Controllers\AgeRatingController::class],
         ['name' => 'film', 'plural' => 'films', 'controller' => Controllers\FilmController::class],
+        ['name' => 'film_review', 'plural' => 'film_reviews', 'controller' => Controllers\FilmReviewController::class],
     ])->map(function ($item) {
         return (object)$item;
     });

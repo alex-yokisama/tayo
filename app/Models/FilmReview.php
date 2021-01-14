@@ -21,4 +21,13 @@ class FilmReview extends Model
     {
         return $this->belongsToMany('App\Models\Film', 'film_review_recomendation', 'film_review_id', 'film_id');
     }
+
+    public function getSummaryShortAttribute()
+    {
+        $summary = $this->summary;
+        if (!$summary || mb_strlen($summary) < 256) {
+            return $summary;
+        }
+        return mb_substr($summary, 0, 253).'...';
+    }
 }

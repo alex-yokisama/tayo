@@ -51,7 +51,9 @@ class FilmAutocompleteMultiple extends Component
         $query = Film::where(function($query) {
             $query->orWhere('name', 'LIKE', '%'.$this->search.'%');
         });
-        $query->whereNotIn('id', $this->excludeIds);
+        $query->whereNotIn('id', $this->items->map(function($item) {
+             return $item->id;
+         })->concat($this->excludeIds));
         $this->suggestions = $query->limit(10)->get();
     }
 

@@ -19,9 +19,10 @@ class SidebarLinksService
             [
                 'name' => 'Films',
                 'items' => collect([
-                    ['path' => '/admin/film_genres', 'name' => 'Film genres'],
+                    ['path' => '/admin/film_genres', 'name' => 'Genres'],
                     ['path' => '/admin/age_ratings', 'name' => 'Age ratings'],
-                    ['path' => '/admin/films', 'name' => 'Films']
+                    ['path' => '/admin/films', 'name' => 'Films'],
+                    ['path' => '/admin/film_reviews', 'name' => 'Reviews']
                 ])
             ],
             [
