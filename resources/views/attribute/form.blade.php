@@ -107,7 +107,7 @@
                 <x-common.input.select
                     name="group"
                     :required="true"
-                    selected="{{ $errors->any() ? old('group') : ($item !== null && $item->group !== null ? $item->group->id : '') }}"
+                    :selected="$errors->any() ? old('group') : ($item !== null && $item->group !== null ? $item->group->id : null)"
                     :options="($groups->map(function($item) {
                         return (object)['key' => $item->id, 'value' => $item->name];
                     })->toArray())"

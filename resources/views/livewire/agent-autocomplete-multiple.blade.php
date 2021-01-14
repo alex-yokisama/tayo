@@ -1,14 +1,5 @@
-<div class="">
-
-    <div style="{{ $item !== null ? '' : 'display: none;' }}" class="inline-block border px-4 py-0.5 space-x-2 whitespace-no-wrap">
-        @if ($item !== null)
-            <span>{{ $item->fullName }}</span>
-            <a href="#" wire:click.prevent="dismiss">&times;</a>
-            <input type="hidden" name="{{ $name }}" value="{{ $item->id }}">
-        @endif
-    </div>
-
-    <div class="relative" style="{{ $item !== null ? 'display: none;' : '' }}">
+<div>
+    <div class="relative">
         <x-common.input.input type="text" wire:keyup.debounce.500ms="autocomplete" wire:model="search"/>
         @if ($suggestions->isNotEmpty())
             <ul class="absolute left-1 top-full border-b shadow-md z-10">
@@ -20,5 +11,13 @@
             </ul>
         @endif
     </div>
-
+    <div class="tagContainer flex flex-row justify-start items-center space-x-2 mt-1">
+        @foreach ($items as $item)
+            <div class="bg-green-400 rounded-full px-2 py-0.5 text-white text-sm font-bold whitespace-no-wrap">
+                <input type="hidden" name="{{ $name }}" value="{{ $item->id }}">
+                <span>{{ $item->fullName }}</span>
+                <a href="#" wire:click.prevent="remove({{ $item->id }})">&times;</a>
+            </div>
+        @endforeach
+    </div>
 </div>

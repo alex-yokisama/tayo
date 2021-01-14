@@ -67,8 +67,7 @@
                 <x-common.input.select
                     name="type"
                     :required="true"
-                    :default="false"
-                    selected="{{ old('type') !== null ? old('type') : ($item !== null ? $item->type->id : '') }}"
+                    :selected="old('type') !== null ? old('type') : ($item !== null ? $item->type->id : null)"
                     :options="($types->map(function($item, $index) {
                         return (object)['key' => $index, 'value' => $item];
                     })->toArray())"

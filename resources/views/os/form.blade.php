@@ -68,7 +68,7 @@
                         <x-common.input.select
                             name="brand"
                             :required="true"
-                            selected="{{ old('brand') !== null ? old('brand') : ($item !== null && $item->brand !== null ? $item->brand->id : '') }}"
+                            :selected="old('brand') !== null ? old('brand') : ($item !== null && $item->brand !== null ? $item->brand->id : null)"
                             :options="($brands->map(function($item) {
                                 return (object)['key' => $item->id, 'value' => $item->name];
                             })->toArray())"
@@ -81,7 +81,7 @@
                         <x-common.input.select
                             name="license"
                             :required="true"
-                            selected="{{ old('license') !== null ? old('license') : ($item !== null && $item->licenseType !== null ? $item->licenseType->id : '') }}"
+                            :selected="old('license') !== null ? old('license') : ($item !== null && $item->licenseType !== null ? $item->licenseType->id : null)"
                             :options="($licenses->map(function($item) {
                                 return (object)['key' => $item->id, 'value' => $item->name];
                             })->toArray())"
@@ -218,7 +218,7 @@
                         <x-common.input.select x-data="parentSelect()" x-ref='parentSelect' x-on:change="parentChanged($refs)" x-init="parentChanged($refs)"
                             name="parent"
                             :required="false"
-                            selected="{{ old('parent') !== null ? old('parent') : ($item !== null && $item->parent !== null ? $item->parent->id : '') }}"
+                            :selected="old('parent') !== null ? old('parent') : ($item !== null && $item->parent !== null ? $item->parent->id : null)"
                             :options="($parents->map(function($item) {
                                 return (object)['key' => $item->id, 'value' => $item->name];
                             })->toArray())"

@@ -81,7 +81,7 @@
                         <x-common.input.select
                             name="currency_msrp"
                             :required="true"
-                            selected="{{ $errors->any() ? old('currency_msrp') : ($item !== null ? $item->currency_msrp : '') }}"
+                            :selected="$errors->any() ? old('currency_msrp') : ($item !== null ? $item->currency_msrp : null)"
                             :options="($currencies->map(function($item) {
                                 return (object)['key' => $item->id, 'value' => $item->symbol];
                             })->toArray())"
@@ -96,7 +96,7 @@
                         <x-common.input.select
                             name="currency_current"
                             :required="true"
-                            selected="{{ $errors->any() ? old('currency_current') : ($item !== null ? $item->currency_current : '') }}"
+                            :selected="$errors->any() ? old('currency_current') : ($item !== null ? $item->currency_current : null)"
                             :options="($currencies->map(function($item) {
                                 return (object)['key' => $item->id, 'value' => $item->symbol];
                             })->toArray())"
@@ -212,7 +212,7 @@
                         <x-common.input.select x-data="categorySelect()" x-ref='categorySelect' x-on:change="categoryChanged($refs)" x-init="categoryChanged($refs)"
                             name="category"
                             :required="true"
-                            selected="{{ old('category') !== null ? old('category') : ($item !== null && $item->category !== null ? $item->category->id : '') }}"
+                            :selected="old('category') !== null ? old('category') : ($item !== null && $item->category !== null ? $item->category->id : null)"
                             :options="($categories->map(function($item) {
                                 return (object)['key' => $item->id, 'value' => $item->name];
                             })->toArray())"
@@ -238,7 +238,7 @@
                         <x-common.input.select
                             name="brand"
                             :required="true"
-                            selected="{{ old('brand') !== null ? old('brand') : ($item !== null && $item->brand !== null ? $item->brand->id : '') }}"
+                            :selected="old('brand') !== null ? old('brand') : ($item !== null && $item->brand !== null ? $item->brand->id : null)"
                             :options="($brands->map(function($item) {
                                 return (object)['key' => $item->id, 'value' => $item->name];
                             })->toArray())"
@@ -251,7 +251,7 @@
                         <x-common.input.select
                             name="country"
                             :required="true"
-                            selected="{{ old('country') !== null ? old('country') : ($item !== null && $item->country !== null ? $item->country->id : '') }}"
+                            :selected="old('country') !== null ? old('country') : ($item !== null && $item->country !== null ? $item->country->id : null)"
                             :options="($countries->map(function($item) {
                                 return (object)['key' => $item->id, 'value' => $item->name];
                             })->toArray())"

@@ -11,8 +11,9 @@ class AgentAutocomplete extends Component
     public $suggestions;
     public $search;
     public $name;
+    public $type;
 
-    public function mount($name, $item = null)
+    public function mount($name, $item = null, ?int $type = null)
     {
         $this->dismiss();
         if ($item) {
@@ -21,6 +22,7 @@ class AgentAutocomplete extends Component
             $this->item = null;
         }
         $this->name = $name;
+        $this->type = $type;
     }
 
     public function render()
@@ -34,7 +36,14 @@ class AgentAutocomplete extends Component
             $this->suggestions = collect([]);
             return;
         }
-        $this->suggestions = Agent::where('name', 'LIKE', '%'.$this->search.'%')->limit(10)->get();
+        $query = Agent::where(function($query) {
+            $query->orWhere('name', 'LIKE', '%'.$this->search.'%')
+                  ->orWhere('surname', 'LIKE', '%'.$this->search.'%');
+        });
+        if ($this->type !== null) {
+            $query->where('type_id', $this->type);
+        }
+        $this->suggestions = $query->limit(10)->get();
     }
 
     public function hydrate()

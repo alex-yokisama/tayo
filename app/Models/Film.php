@@ -36,12 +36,12 @@ class Film extends Model
         return $this->belongsTo('App\Models\Agent', 'producer_id');
     }
 
-    public function productionCompany()
+    public function production_company()
     {
         return $this->belongsTo('App\Models\Agent', 'production_company_id');
     }
 
-    public function ageRating()
+    public function age_rating()
     {
         return $this->belongsTo('App\Models\AgeRating', 'age_rating_id');
     }
