@@ -45,7 +45,10 @@
                 </x-slot>
                 @livewire('film-autocomplete', [
                     'name' => 'film',
-                    'item' => $errors->any() ? old('film') : ($item !== null && $item->film !== null ? $item->film->id : null)
+                    'item' => (
+                        $errors->any() ? old('film') :
+                        ($item !== null ? ($item->film !== null ? $item->film->id : null) : (Request()->film))
+                    )
                 ])
             </x-form.input>
             <x-form.input>

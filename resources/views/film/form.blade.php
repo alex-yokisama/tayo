@@ -195,6 +195,57 @@
                 </x-form.container>
                 <div class="spacer h-40"></div>
             </x-slot>
+
+            @if ($item !== null)
+                <x-slot name="Reviews">
+                    <x-common.button.group  class="my-2">
+                        <x-common.button.a href="/admin/film_review?film={{ $item->id }}" target="_blank">New review</x-common.button.a>
+                    </x-common.button.group>
+                    <x-common.table.table>
+                        <x-slot name="thead">
+                            <x-common.table.th>
+                                title
+                            </x-common.table.th>
+                            <x-common.table.th>
+                                rating
+                            </x-common.table.th>
+                            <x-common.table.th>
+                                summary
+                            </x-common.table.th>
+                            <x-common.table.th>
+                                recomendations
+                            </x-common.table.th>
+                            <x-common.table.th></x-common.table.th>
+                        </x-slot>
+                        @foreach ($item->reviews as $review)
+                            <x-common.table.tr>
+                                <x-common.table.td>
+                                    {{ $review->title }}
+                                </x-common.table.td>
+                                <x-common.table.td>
+                                    {{ $review->rating }}
+                                </x-common.table.td>
+                                <x-common.table.td>
+                                    {{ $review->summary_short }}
+                                </x-common.table.td>
+                                <x-common.table.td>
+                                    {{ $review->recomendations->map(function($item) {
+                                        return $item->name;
+                                    })->join(', ') }}
+                                </x-common.table.td>
+                                <x-common.table.td>
+                                    <x-common.button.group  class="justify-end">
+                                        <x-common.button.a href="/admin/film_review?id={{ $review->id }}" target="_blank">
+                                            Edit
+                                        </x-common.button.a>
+                                    </x-common.button.group>
+                                </x-common.table.td>
+                            </x-common.table.tr>
+                        @endforeach
+                    </x-common.table.table>
+                </x-slot>
+            @endif
+
         </x-common.tabs>
     </form>
 </x-custom-layout>
