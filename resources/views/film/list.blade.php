@@ -43,68 +43,61 @@
 
     <x-list>
         <x-slot name="search">
-            {{-- <div class="space-x-2">
+            <div class="space-x-2">
                 <label>Name</label>
                 <input type="text" name="name" value="{{ Request()->name }}" class="border px-2 py-0.5">
             </div>
             <div class="space-x-2">
-                <label>Text</label>
-                <input type="text" name="text" value="{{ Request()->text }}" class="border px-2 py-0.5">
-            </div>
-            <div class="space-x-2">
-                <label>Price</label>
+                <label>Release date</label>
                 <span>from </span>
-                <input type="number" name="price_from" value="{{ Request()->price_from }}" class="border px-2 py-0.5">
+                <input type="date" name="release_date_from" value="{{ Request()->release_date_from }}" class="border px-2 py-0.5">
                 <span>to </span>
-                <input type="number" name="price_to" value="{{ Request()->price_to }}" class="border px-2 py-0.5">
+                <input type="date" name="release_date_to" value="{{ Request()->release_date_to }}" class="border px-2 py-0.5">
+            </div>
+            <div>
+                <label>Age rating</label>
+                <x-common.input.select
+                    name="age_rating"
+                    :required="false"
+                    :selected="Request()->age_rating"
+                    :options="($ageRatings->map(function($item) {
+                        return (object)['key' => $item->id, 'value' => $item->name.' ('.$item->age_from.'+)'];
+                    })->toArray())"
+                />
             </div>
             <div class="space-x-2">
-                <label>Date created</label>
-                <span>from </span>
-                <input type="date" name="created_at_from" value="{{ Request()->created_at_from }}" class="border px-2 py-0.5">
-                <span>to </span>
-                <input type="date" name="created_at_to" value="{{ Request()->created_at_to }}" class="border px-2 py-0.5">
-            </div>
-            <div class="space-x-2">
-                <label>Date published</label>
-                <span>from </span>
-                <input type="date" name="date_publish_from" value="{{ Request()->date_publish_from }}" class="border px-2 py-0.5">
-                <span>to </span>
-                <input type="date" name="date_publish_to" value="{{ Request()->date_publish_to }}" class="border px-2 py-0.5">
-            </div>
-            <div class="space-x-2">
-                <label>Categories</label>
-                <div class="grid gap-1 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                    @foreach ($categories as $category)
-                        <label>
-                            <input type="checkbox" {{ collect(Request()->categories)->contains($category->id) ? 'checked' : '' }} name="categories[]" value="{{ $category->id }}">
-                            {{ $category->name }}
-                        </label>
+                <label>Type</label>
+                <select class="border px-2 py-0.5" name="type">
+                    <option value="any" {{ Request()->type == 'any' ? 'selected' : '' }}>any</option>
+                    @foreach ($types as $type_id => $type_name)
+                        <option value="{{ $type_id }}" {{ Request()->type === (string)$type_id ? 'selected' : '' }}>{{ $type_name }}</option>
                     @endforeach
-                </div>
+                </select>
             </div>
             <div class="space-x-2">
-                <label>Brands</label>
-                <div class="grid gap-1 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                    @foreach ($brands as $brand)
-                        <label>
-                            <input type="checkbox" {{ collect(Request()->brands)->contains($brand->id) ? 'checked' : '' }} name="brands[]" value="{{ $brand->id }}">
-                            {{ $brand->name }}
-                        </label>
-                    @endforeach
-                </div>
+                <label>Genre</label>
+                <input type="text" name="genre" value="{{ Request()->genre }}" class="border px-2 py-0.5">
             </div>
             <div class="space-x-2">
-                <label>Countries</label>
-                <div class="grid gap-1 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                    @foreach ($countries as $country)
-                        <label>
-                            <input type="checkbox" {{ collect(Request()->countries)->contains($country->id) ? 'checked' : '' }} name="countries[]" value="{{ $country->id }}">
-                            {{ $country->name }}
-                        </label>
-                    @endforeach
-                </div>
-            </div> --}}
+                <label>Director</label>
+                <input type="text" name="director" value="{{ Request()->director }}" class="border px-2 py-0.5">
+            </div>
+            <div class="space-x-2">
+                <label>Writer</label>
+                <input type="text" name="writer" value="{{ Request()->writer }}" class="border px-2 py-0.5">
+            </div>
+            <div class="space-x-2">
+                <label>Producer</label>
+                <input type="text" name="producer" value="{{ Request()->producer }}" class="border px-2 py-0.5">
+            </div>
+            <div class="space-x-2">
+                <label>Production company</label>
+                <input type="text" name="production_company" value="{{ Request()->production_company }}" class="border px-2 py-0.5">
+            </div>
+            <div class="space-x-2">
+                <label>Actor</label>
+                <input type="text" name="actor" value="{{ Request()->actor }}" class="border px-2 py-0.5">
+            </div>
         </x-slot>
 
         {{ $items->withQueryString()->links('vendor.pagination.custom-tailwind', ['allowedPerPages' => $allowedPerPages]) }}
@@ -162,7 +155,9 @@
                                 {{ $item->release_date }}
                             </x-common.table.td>
                             <x-common.table.td>
-                                {{ $item->genres->join(', ') }}
+                                {{ $item->genres->map(function($item) {
+                                    return $item->name;
+                                })->join(', ') }}
                             </x-common.table.td>
                             <x-common.table.td>{{ $item->type->name }}</x-common.table.td>
                             <x-common.table.td>{{ $item->director !== null ? $item->director->full_name : '' }}</x-common.table.td>

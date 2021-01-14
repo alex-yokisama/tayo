@@ -10,28 +10,38 @@ class ListRequest extends BaseListRequest
     public function rules()
     {
         $rules = [
-            'name' => 'sometimes|max:255',
-            'text' => 'sometimes|max:2000',
-            'date_publish_from' => 'sometimes|nullable|date',
-            'date_publish_to' => 'sometimes|nullable|date',
-            'created_at_from' => 'sometimes|nullable|date',
-            'created_at_to' => 'sometimes|nullable|date',
-            'price_from' => 'sometimes|nullable|numeric',
-            'price_to' => 'sometimes|nullable|numeric',
-            'categories' => 'sometimes|array',
-            'categories.*' => 'integer',
-            'countries' => 'sometimes|array',
-            'countries.*' => 'integer',
-            'brands' => 'sometimes|array',
-            'brands.*' => 'integer',
+            'name' => 'sometimes|nullable|string|max:255',
+            'release_date_from' => 'sometimes|nullable|date',
+            'release_date_to' => 'sometimes|nullable|date',
+            'genre' => 'sometimes|nullable|string|max:255',
+            'age_rating' => 'sometimes|nullable|integer',
+            'director' => 'sometimes|nullable|string|max:255',
+            'writer' => 'sometimes|nullable|string|max:255',
+            'producer' => 'sometimes|nullable|string|max:255',
+            'actor' => 'sometimes|nullable|string|max:255',
+            'production_company' => 'sometimes|nullable|string|max:255',
             'page' => 'sometimes|integer',
             'perPage' => 'sometimes|integer',
         ];
+
+        if ($this->type !== null) {
+            $rules['type'] = 'sometimes|integer|min:0|max:1';
+        }
+
         return $rules;
     }
 
     protected function allowedSorts() : \Illuminate\Support\Collection
     {
-        return collect(['id', 'name', 'sku', 'model', 'model_family', 'created_at', 'date_publish', 'price_msrp', 'price_current', 'is_promote', 'category', 'brand', 'country']);
+        return collect(['id', 'name', 'release_date']);
+    }
+
+    protected function prepareForValidation()
+    {
+        parent::prepareForValidation();
+
+        if ($this->type == "any") {
+            $this->type = null;
+        }
     }
 }

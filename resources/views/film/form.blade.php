@@ -180,9 +180,9 @@
                             Recomendations
                         </x-slot>
                         @livewire('film-autocomplete-multiple', [
-                            'name' => 'recomedations[]',
+                            'name' => 'recomendations[]',
                             'excludeIds' => ($item !== null ? [$item->id] : []),
-                            'items' => ($errors->any() ? old('recomedations') : ($item !== null ? $item->recomedations : []))])
+                            'items' => ($errors->any() ? old('recomendations') : ($item !== null ? $item->recomendations : []))])
                     </x-form.input>
                     <x-form.input>
                         <x-slot name="label">

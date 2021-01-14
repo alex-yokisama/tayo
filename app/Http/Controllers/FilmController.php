@@ -25,68 +25,72 @@ class FilmController extends BaseItemController
             'production_company'
         ]);
 
-        // if ($request->name) {
-        //     $items->where('product.name', 'LIKE', '%'.$request->name.'%')
-        //         ->orWhere('sku', 'LIKE', '%'.$request->name.'%')
-        //         ->orWhere('model', 'LIKE', '%'.$request->name.'%')
-        //         ->orWhere('model_family', 'LIKE', '%'.$request->name.'%');
-        // }
-        //
-        // if ($request->text) {
-        //     $items->where('excerpt', 'LIKE', '%'.$request->text.'%')
-        //         ->orWhere('summary_main', 'LIKE', '%'.$request->text.'%')
-        //         ->orWhere('summary_value', 'LIKE', '%'.$request->text.'%')
-        //         ->orWhere('full_overview', 'LIKE', '%'.$request->text.'%')
-        //         ->orWhere('seo_keywords', 'LIKE', '%'.$request->text.'%')
-        //         ->orWhere('tags', 'LIKE', '%'.$request->text.'%');
-        // }
-        //
-        // if ($request->price_from) {
-        //     $items->where('price_current', '>=', $request->price_from)
-        //         ->orWhere('price_msrp', '>=', $request->price_from);
-        // }
-        //
-        // if ($request->price_to) {
-        //     $items->where('price_current', '<=', $request->price_to)
-        //         ->orWhere('price_msrp', '<=', $request->price_to);
-        // }
-        //
-        // if ($request->created_at_from) {
-        //     $items->where('product.created_at', '>=', $request->created_at_from);
-        // }
-        //
-        // if ($request->date_publish_from) {
-        //     $items->where('date_publish', '>=', $request->date_publish_from);
-        // }
-        //
-        // if ($request->created_at_to) {
-        //     $items->where('product.created_at', '<=', $request->created_at_to);
-        // }
-        //
-        // if ($request->date_publish_to) {
-        //     $items->where('date_publish', '<=', $request->date_publish_to);
-        // }
-        //
-        // if ($request->countries && count($request->countries) > 0) {
-        //     $items->whereHas('country', function($q) use ($request) {
-        //         $q->whereKey($request->countries);
-        //     });
-        // }
-        //
-        // if ($request->brands && count($request->brands) > 0) {
-        //     $items->whereHas('brand', function($q) use ($request) {
-        //         $q->whereKey($request->brands);
-        //     });
-        // }
-        //
-        // if ($request->categories && count($request->categories) > 0) {
-        //     $items->whereHas('category', function($q) use ($request) {
-        //         $q->whereKey($request->categories);
-        //     });
-        // }
+        if ($request->name) {
+            $items->where('film.name', 'LIKE', '%'.$request->name.'%');;
+        }
+
+        if ($request->type !== null) {
+            $items->where('film.type_id', $request->type);;
+        }
+
+        if ($request->release_date_from) {
+            $items->where('release_date', '>=', $request->release_date_from);
+        }
+
+        if ($request->release_date_to) {
+            $items->where('release_date', '<=', $request->release_date_to);
+        }
+
+        if ($request->age_rating) {
+            $items->where('age_rating_id', $request->age_rating);;
+        }
+
+        if ($request->genre) {
+            $items->whereHas('genres', function($q) use ($request) {
+                $q->where('film_genre.name', 'LIKE', '%'.$request->genre.'%');
+            });
+        }
+
+        if ($request->director) {
+            $items->whereHas('director', function($q) use ($request) {
+                $q->where('agent.name', 'LIKE', '%'.$request->director.'%')
+                ->orWhere('agent.surname', 'LIKE', '%'.$request->director.'%');
+            });
+        }
+
+        if ($request->writer) {
+            $items->whereHas('writer', function($q) use ($request) {
+                $q->where('agent.name', 'LIKE', '%'.$request->writer.'%')
+                ->orWhere('agent.surname', 'LIKE', '%'.$request->writer.'%');
+            });
+        }
+
+        if ($request->producer) {
+            $items->whereHas('producer', function($q) use ($request) {
+                $q->where('agent.name', 'LIKE', '%'.$request->producer.'%')
+                ->orWhere('agent.surname', 'LIKE', '%'.$request->producer.'%');
+            });
+        }
+
+        if ($request->actor) {
+            $items->whereHas('actors', function($q) use ($request) {
+                $q->where('agent.name', 'LIKE', '%'.$request->actor.'%')
+                ->orWhere('agent.surname', 'LIKE', '%'.$request->actor.'%');
+            });
+        }
+
+        if ($request->production_company) {
+            $items->whereHas('production_company', function($q) use ($request) {
+                $q->where('agent.name', 'LIKE', '%'.$request->production_company.'%')
+                ->orWhere('agent.surname', 'LIKE', '%'.$request->production_company.'%');
+            });
+        }
 
         $listData = $this->getListData($request);
         $listData['items'] = $items->paginate($request->perPage);
+
+        $listData['types'] = Film::types();
+        $listData['ageRatings'] = AgeRating::all();
 
         return view('film.list', $listData);
     }
@@ -114,6 +118,9 @@ class FilmController extends BaseItemController
         $item->description = $request->description;
         $item->image = $request->image;
 
+        $item->save();
+        $item->refresh();
+
         $age_rating = AgeRating::find($request->age_rating);
         if ($age_rating !== null) {
             $item->age_rating()->associate($age_rating);
@@ -140,10 +147,10 @@ class FilmController extends BaseItemController
         }
 
         $item->recomendations()->detach();
-        if ($request->recomedations) {
-            $films = Film::whereKey($request->recomedations)->get();
+        if ($request->recomendations) {
+            $films = Film::whereKey($request->recomendations)->get();
             foreach ($films as $film) {
-                $item->recomedations()->attach($film);
+                $item->recomendations()->attach($film);
             }
         }
 
