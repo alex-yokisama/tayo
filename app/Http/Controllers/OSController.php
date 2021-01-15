@@ -17,7 +17,7 @@ class OSController extends BaseItemController
 
     public function list(Requests\ListRequest $request)
     {
-        $items = OS::orderByColumn($request->sort, $request->order)->with(['categories', 'brand', 'licenseType']);
+        $items = OS::orderByColumn($request->sort, $request->order)->whereDoesntHave('parent')->with(['categories', 'brand', 'licenseType', 'children']);
 
         if ($request->name) {
             $items->where('os.name', 'LIKE', '%'.$request->name.'%');;
@@ -51,7 +51,7 @@ class OSController extends BaseItemController
         $listData['licenses'] = LicenseType::all();
         $listData['brands'] = Brand::all();
 
-        return view('os.list', $listData);
+        return view('os.tree', $listData);
     }
 
     public function form(Requests\GetFormRequest $request)
@@ -145,7 +145,9 @@ class OSController extends BaseItemController
                 }
                 $release->version = $releaseArr['version'];
                 $release->release_date = $releaseArr['release_date'];
-                $release->added_features = $releaseArr['added_features'];
+                if (isset($releaseArr['added_features'])) {
+                    $release->added_features = $releaseArr['added_features'];
+                }                
                 $item->releases()->save($release);
             }
         }
