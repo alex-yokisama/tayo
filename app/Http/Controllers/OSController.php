@@ -19,37 +19,8 @@ class OSController extends BaseItemController
     {
         $items = OS::orderByColumn($request->sort, $request->order)->whereDoesntHave('parent')->with(['categories', 'brand', 'licenseType', 'children']);
 
-        if ($request->name) {
-            $items->where('os.name', 'LIKE', '%'.$request->name.'%');;
-        }
-
-        if ($request->is_kernel !== null) {
-            $items->where('is_kernel', '=', $request->is_kernel);
-        }
-
-        if ($request->categories && count($request->categories) > 0) {
-            $items->whereHas('categories', function($q) use ($request) {
-                $q->whereIn('id', $request->categories);
-            });
-        }
-
-        if ($request->brands && count($request->brands) > 0) {
-            $items->whereHas('brand', function($q) use ($request) {
-                $q->whereIn('id', $request->brands);
-            });
-        }
-
-        if ($request->licenses && count($request->licenses) > 0) {
-            $items->whereHas('licenseType', function($q) use ($request) {
-                $q->whereIn('id', $request->clicenses);
-            });
-        }
-
         $listData = $this->getListData($request);
-        $listData['items'] = $items->paginate($request->perPage);
-        $listData['categories'] = Category::listWithFullPath();
-        $listData['licenses'] = LicenseType::all();
-        $listData['brands'] = Brand::all();
+        $listData['items'] = $items->get();
 
         return view('os.tree', $listData);
     }
@@ -147,7 +118,7 @@ class OSController extends BaseItemController
                 $release->release_date = $releaseArr['release_date'];
                 if (isset($releaseArr['added_features'])) {
                     $release->added_features = $releaseArr['added_features'];
-                }                
+                }
                 $item->releases()->save($release);
             }
         }

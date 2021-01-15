@@ -9,14 +9,7 @@ class ListRequest extends BaseListRequest
 {
     public function rules()
     {
-        $rules = [
-            'name' => 'sometimes|max:255',
-            'categories' => 'sometimes|array',
-            'categories.*' => 'integer',
-            'licenses' => 'sometimes|array',
-            'licenses.*' => 'integer',
-            'brands' => 'sometimes|array',
-            'brands.*' => 'integer',
+        $rules = [            
             'page' => 'sometimes|integer',
             'perPage' => 'sometimes|integer',
         ];
