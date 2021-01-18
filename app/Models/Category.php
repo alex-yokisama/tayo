@@ -37,6 +37,11 @@ class Category extends Model
         return $this->hasMany('App\Models\Product', 'category_id');
     }
 
+    public function os()
+    {
+        return $this->belongsToMany('App\Models\OS', 'os_to_category', 'category_id', 'os_id');
+    }
+
     static public function orderByColumn($column, $order = 'ASC')
     {
         $order = strtoupper($order) == 'ASC' ? 'ASC' : 'DESC';

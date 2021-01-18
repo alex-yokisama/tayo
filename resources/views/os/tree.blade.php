@@ -35,8 +35,8 @@
 
     <x-common.table.table>
         <x-slot name="thead">
-            <x-common.table.th>parent</x-common.table.th>
             <x-common.table.th>name</x-common.table.th>
+            <x-common.table.th>parent</x-common.table.th>
             <x-common.table.th>Logo</x-common.table.th>
             <x-common.table.th>brand</x-common.table.th>
             <x-common.table.th>license</x-common.table.th>

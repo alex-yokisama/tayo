@@ -37,9 +37,19 @@ class Product extends Model
         return $this->belongsTo('App\Models\Currency', 'currency_current');
     }
 
+    public function releasedWithOS()
+    {
+        return $this->belongsTo('App\Models\OS', 'released_with_os_id');
+    }
+
     public function targetCountries()
     {
         return $this->belongsToMany('App\Models\Country', 'product_to_country', 'product_id', 'country_id');
+    }
+
+    public function updatableToOS()
+    {
+        return $this->belongsToMany('App\Models\OS', 'product_to_os', 'product_id', 'os_id');
     }
 
     public function similarProducts()

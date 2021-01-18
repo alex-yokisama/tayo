@@ -17,6 +17,7 @@ use App\Models\ProductContent;
 use App\Models\Currency;
 use App\Models\Agent;
 use App\Models\Website;
+use App\Models\OS;
 
 class ProductController extends BaseItemController
 {
@@ -215,6 +216,22 @@ class ProductController extends BaseItemController
             return back()->withErrors([
                 'brand' => 'Selected brand does not exist'
             ])->withInput();
+        }
+
+        $item->releasedWithOS()->dissociate();
+        if ($request->released_with_os) {
+            $os = OS::find($request->released_with_os);
+            if ($os) {
+                $item->releasedWithOS()->associate($os);
+            }
+        }
+
+        $item->updatableToOS()->detach();
+        if ($request->updatable_to_os) {
+            $osList = OS::whereKey($request->updatable_to_os)->get();
+            foreach ($osList as $os) {
+                $item->updatableToOS()->attach($os);
+            }
         }
 
         $item->targetCountries()->detach();

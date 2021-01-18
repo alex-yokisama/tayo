@@ -1,8 +1,8 @@
 @props(['item', 'backUrl', 'parent' => ''])
 
 <x-common.table.tr x-data="{}">
-    <x-common.table.td>{{ $parent }}</x-common.table.td>
     <x-common.table.td>{{ $item->name }}</x-common.table.td>
+    <x-common.table.td>{{ $parent }}</x-common.table.td>
     <x-common.table.td>
         @if ($item->image != null)
             <div class="w-16 h-16 bg-contain bg-no-repeat bg-center" style="background-image: url('{{ $item->imageUrl }}');"></div>

@@ -274,22 +274,34 @@
                     </x-form.input>
                     <x-form.input>
                         <x-slot name="label">
+                            Released with OS
+                        </x-slot>
+                        @livewire('os-autocomplete', [
+                            'name' => 'released_with_os',
+                            'item' => (
+                                $errors->any() ? old('released_with_os') :
+                                ($item !== null && $item->releasedWithOS !== null ? $item->releasedWithOS->id : null)
+                            )
+                        ])
+                    </x-form.input>
+                    <x-form.input>
+                        <x-slot name="label">
+                            Updatable to OS
+                        </x-slot>
+                        @livewire('os-autocomplete-multiple', [
+                            'name' => 'updatable_to_os[]',
+                            'items' => ($errors->any() ? old('updatable_to_os') : ($item !== null ? $item->updatableToOS : []))])
+                    </x-form.input>
+                    <x-form.input>
+                        <x-slot name="label">
                             Websites
                         </x-slot>
-                        @foreach ($websites as $website)
-                            <label class="block">
-                                <input type="checkbox" name="websites[]" value="{{ $website->id }}"
-                                    {{
-                                        $errors->any() ?
-                                        (collect(old('websites'))->contains($website->id) ? 'checked' : '') :
-                                        (($item !== null && $item->websites->contains($website)) ? 'checked' : '')
-                                    }}
-                                >
-                                {{ $website->url }}
-                            </label>
-                        @endforeach
+                        @livewire('website-autocomplete-multiple', [
+                            'name' => 'websites[]',
+                            'items' => ($errors->any() ? old('websites') : ($item !== null ? $item->websites : []))])
                     </x-form.input>
                 </x-form.container>
+                <div class="spacer h-40"></div>
             </x-slot>
 
             @foreach ($attributeKinds as $kind_id => $kind_name)
