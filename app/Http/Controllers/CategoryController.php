@@ -40,6 +40,9 @@ class CategoryController extends BaseItemController
         $item = Category::firstOrNew(['id' => $request->id]);
         $item->name = $request->name;
 
+        $item->save();
+        $item->refresh();
+
         $item->parent()->dissociate();
         $parent = Category::find($request->parent);
         if ($parent) {
