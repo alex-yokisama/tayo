@@ -43,6 +43,7 @@ class SidebarLinksService
                 'name' => 'Other',
                 'items' => collect([
                     ['path' => '/admin/agents', 'name' => 'Agents'],
+                    ['path' => '/admin/apps', 'name' => 'Apps'],
                     ['path' => '/admin/brands', 'name' => 'Brands'],
                     ['path' => '/admin/countries', 'name' => 'Countries'],
                     ['path' => '/admin/currencies', 'name' => 'Currencies'],

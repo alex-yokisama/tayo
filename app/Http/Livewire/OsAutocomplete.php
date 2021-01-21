@@ -14,6 +14,7 @@ class OsAutocomplete extends Component
     public $name;
     public $categoryId;
     public $categoryHasItems;
+    public $anyCategory;
 
     protected $listeners = ['categoryChanged'];
 
@@ -30,7 +31,7 @@ class OsAutocomplete extends Component
         $this->autocomplete();
     }
 
-    public function mount($name, $item = null)
+    public function mount($name, $item = null, ?bool $anyCategory = false)
     {
         $this->dismiss();
         if ($item) {
@@ -40,7 +41,8 @@ class OsAutocomplete extends Component
         }
         $this->name = $name;
         $this->categoryId = null;
-        $this->categoryHasItems = false;
+        $this->anyCategory = $anyCategory;
+        $this->categoryHasItems = $anyCategory;
     }
 
     public function render()

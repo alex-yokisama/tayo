@@ -19,7 +19,7 @@ class CreateFilmToWebsiteTable extends Migration
             $table->string('link')->nullable();
 
             $table->foreign('film_id')->references('id')->on('film')->onDelete('cascade');
-            $table->foreign('website_id')->references('id')->on('film_genre')->onDelete('cascade');
+            $table->foreign('website_id')->references('id')->on('website')->onDelete('cascade');
             $table->unique(['film_id', 'website_id']);
         });
     }
